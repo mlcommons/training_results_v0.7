@@ -1,0 +1,826 @@
++ echo 'Beginning trial 1 of 1'
+Beginning trial 1 of 1
++ srun -N1 -n1 --container-name=minigo python -c '
+import mlperf_log_utils
+from mlperf_logging.mllog import constants
+mlperf_log_utils.mlperf_submission_log(constants.MINIGO)'
+srun: Job 507119 step creation temporarily disabled, retrying
+srun: Step created for job 507119
+slurmstepd: pyxis: reusing existing container
+slurmstepd: pyxis: running "enroot start" ...
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+:::MLLOG {"namespace": "", "time_ms": 1594597411722, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "minigo", "metadata": {"file": "/opt/reinforcement/minigo/ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597411730, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "NVIDIA", "metadata": {"file": "/opt/reinforcement/minigo/ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597411730, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/opt/reinforcement/minigo/ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597411730, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/opt/reinforcement/minigo/ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597411730, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "1xNVIDIA DGX-1", "metadata": {"file": "/opt/reinforcement/minigo/ml_perf/logger.py", "lineno": 27}}
++ '[' 1 -eq 1 ']'
++ srun --ntasks=1 bash -c 'echo -n '\''Clearing cache on '\'' && hostname && sync && sudo /sbin/sysctl vm.drop_caches=3'
+srun: Job 507119 step creation temporarily disabled, retrying
+srun: Step created for job 507119
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+Clearing cache on sc-sdgx-375
+vm.drop_caches = 3
++ srun --ntasks=1 --container-name=minigo python -c '
+from mlperf_logging.mllog import constants
+from mlperf_log_utils import log_event
+log_event(key=constants.CACHE_CLEAR, value=True)'
+slurmstepd: pyxis: reusing existing container
+slurmstepd: pyxis: running "enroot start" ...
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+:::MLLOG {"namespace": "", "time_ms": 1594597416764, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": true, "metadata": {"file": "/opt/reinforcement/minigo/ml_perf/logger.py", "lineno": 27}}
++ export SEED=16641
++ SEED=16641
++ PROCS_PER_GPU=2
++ RANKS_PER_NODE=17
++ srun --mpi=pmix --ntasks=17 --ntasks-per-node=17 --container-name=minigo --container-mounts=/raid/local/mlperf/datasets/minigo_data_19x19:/data,/home/svcnvdlfw/14713884/results:/results ./run_and_time.sh
+srun: Job 507119 step creation temporarily disabled, retrying
+srun: Step created for job 507119
+slurmstepd: pyxis: reusing existing container
+slurmstepd: pyxis: running "enroot start" ...
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+Run vars: id 507119 gpus 8 tasks/node 17 procs/gpu 2
+Running benchmark REINFORCEMENT - Minigo
+STARTING TIMING RUN AT 2020-07-12 04:43:38 PM
++ set -e
++ cd minigo
++ BASE_DIR=ml_perf/mpi-results/slurm-507119
++ CHECKPOINT_DIR=/data/mlperf07
++ TARGET_PATH=/data/target/target.minigo.tf
++ python3 ./ml_perf/train_loop.py --board_size=19 --base_dir=ml_perf/mpi-results/slurm-507119 --flagfile=ml_perf/flags/19/train_loop.flags --checkpoint_dir=/data/mlperf07 --target_path=/data/target/target.minigo.tf --num_gpus_train=4 --ranks_per_node=17 --procs_per_gpu=2 --use_trt=1 --verbose=0 --selfplay_threads=6 --parallel_search=8 --parallel_inference=2 --concurrent_games_per_thread=32 --train_batch_size=4096 --suggested_games_per_iteration=8192 --iterations=70
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There is at least non-excluded one OpenFabrics device found,
+but there are no active ports detected (or Open MPI was unable to use
+them).  This is most certainly not what you wanted.  Check your
+cables, subnet manager configuration, etc.  The openib BTL will be
+ignored for this job.
+
+  Local host: sc-sdgx-375
+--------------------------------------------------------------------------
+:::MLLOG {"namespace": "", "time_ms": 1594597424462, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444867, "event_type": "POINT_IN_TIME", "key": "lr_rates", "value": [0.016, 0.16, 0.016, 0.0016], "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444868, "event_type": "POINT_IN_TIME", "key": "lr_boundaries", "value": [128, 10000, 20000], "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444868, "event_type": "POINT_IN_TIME", "key": "train_batch_size", "value": 4096, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "virtual_losses", "value": 4, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "seed", "value": 0, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "opt_weight_decay", "value": 0.0001, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "filter_amount", "value": 0.3, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "num_readouts", "value": 800, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "value_init_penalty", "value": 0.2, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "holdout_pct", "value": 0.0, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444869, "event_type": "POINT_IN_TIME", "key": "disable_resign_pct", "value": 0.0, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444870, "event_type": "POINT_IN_TIME", "key": "resign_threshold", "value": -0.999, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444870, "event_type": "POINT_IN_TIME", "key": "virtual_losses", "value": 4, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444870, "event_type": "POINT_IN_TIME", "key": "min_selfplay_games_per_generation", "value": 8192, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444870, "event_type": "POINT_IN_TIME", "key": "value_init_penalty", "value": 0.2, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444870, "event_type": "POINT_IN_TIME", "key": "window_size", "value": 5, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597444870, "event_type": "POINT_IN_TIME", "key": "eval_games", "value": 256, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449557, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449558, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449559, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449909, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9240, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449909, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9236, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449909, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9258, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449909, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9261, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597449909, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597518509, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 18}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594597518524, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594597518524, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598519256, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598519257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9240, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598519257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9236, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598519257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9258, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598519258, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9261, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598634398, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 19}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594598634426, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594598634427, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599535556, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599535557, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9191, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599535557, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9240, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599535558, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9236, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599535558, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9258, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599647774, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 20}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594599647797, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594599647797, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600478561, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600478562, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9137, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600478563, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9191, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600478563, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9240, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600478563, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9236, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600593649, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 21}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594600593672, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594600593673, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601563558, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8198, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601563559, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9183, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601563559, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9137, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601563560, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9191, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601563560, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9240, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601671505, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 22}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594601671527, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594601671528, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602481524, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8199, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602481525, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9028, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602481525, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9183, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602481525, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9137, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602481526, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9191, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602586449, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 23}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594602586472, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594602586473, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603421992, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8199, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603421993, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9142, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603421994, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9028, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603421994, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9183, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603421994, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9137, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603530671, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 24}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594603530692, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594603530693, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604323668, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604323669, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604323670, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9142, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604323670, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9028, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604323670, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9183, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604425145, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 25}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594604425165, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594604425166, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605228006, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605228007, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605228007, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605228007, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9142, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605228007, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9028, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605330164, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 26}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594605330198, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594605330199, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606111162, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8202, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606111164, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606111164, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606111165, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606111165, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9142, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606205154, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 27}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606205174, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594606205175, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607049018, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8198, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607049019, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9112, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607049020, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607049020, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607049020, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607156715, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 28}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594607156736, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594607156736, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608008157, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8199, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608008158, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608008158, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9112, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608008158, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608008159, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608110596, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 29}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594608110617, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594608110618, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608852906, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8206, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608852907, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9127, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608852907, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608852907, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9112, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608852908, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608953835, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 30}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594608953858, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594608953859, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609754863, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8208, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609754864, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609754864, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9127, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609754865, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609754865, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9112, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609852639, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 31}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594609852660, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594609852661, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610614665, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8193, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610614666, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9145, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610614666, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610614666, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9127, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610614667, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9163, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610713373, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 32}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594610713395, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594610713395, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611401879, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611401880, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9193, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611401880, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9145, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611401880, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611401881, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9127, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611489705, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 33}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594611489726, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594611489727, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612203334, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8199, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612203335, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612203335, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9193, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612203335, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9145, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612203336, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612301407, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 34}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594612301429, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594612301430, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613101756, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613101757, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613101757, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613101757, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9193, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613101758, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9145, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613203097, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 35}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594613203120, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594613203120, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614031781, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8202, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614031783, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9130, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614031783, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614031783, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614031784, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9193, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614142474, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 36}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594614142496, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594614142496, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614884845, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8197, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614884846, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9255, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614884847, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9130, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614884847, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614884847, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614984744, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 37}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594614984779, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594614984780, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615701852, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615701853, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9192, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615701853, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9255, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615701853, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9130, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615701854, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615798232, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 38}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594615798253, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594615798254, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616530502, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8202, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616530504, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616530504, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9192, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616530504, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9255, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616530505, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9130, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616627584, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 39}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594616627604, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594616627605, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617356851, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617356852, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617356853, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617356853, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9192, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617356853, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9255, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617454305, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 40}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594617454326, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594617454327, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618144675, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8208, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618144677, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9252, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618144677, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618144677, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618144678, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9192, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618237078, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 41}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594618237093, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594618237094, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594618941154, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8203, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594618941156, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9257, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594618941156, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9252, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594618941156, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594618941156, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594619037406, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 42}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594619037442, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594619037443, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619794931, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8201, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619794932, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9247, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619794932, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9257, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619794933, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9252, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619794933, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619887607, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 43}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594619887631, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594619887632, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620625032, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8198, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620625033, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9136, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620625033, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9247, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620625034, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9257, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620625034, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9252, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620723184, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 44}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594620723208, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 44}}
+:::MLLOG {"namespace": "", "time_ms": 1594620723209, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621414142, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8203, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621414143, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621414143, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9136, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621414144, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9247, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621414144, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9257, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621505311, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 45}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594621505329, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 45}}
+:::MLLOG {"namespace": "", "time_ms": 1594621505330, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622177444, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8202, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622177446, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622177446, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622177446, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9136, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622177447, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9247, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622270742, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 46}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594622270757, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 46}}
+:::MLLOG {"namespace": "", "time_ms": 1594622270758, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594622985066, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8203, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594622985069, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9229, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594622985069, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594622985070, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594622985070, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9136, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594623078837, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 47}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594623078855, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 47}}
+:::MLLOG {"namespace": "", "time_ms": 1594623078856, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623792259, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8209, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623792260, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9217, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623792260, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9229, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623792260, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623792260, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9215, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623889945, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 48}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594623889973, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 48}}
+:::MLLOG {"namespace": "", "time_ms": 1594623889974, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624602458, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8202, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624602459, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9259, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624602460, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9217, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624602460, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9229, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624602460, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624703576, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 49}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594624703600, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 49}}
+:::MLLOG {"namespace": "", "time_ms": 1594624703601, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625441256, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8202, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625441257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9318, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625441257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9259, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625441257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9217, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625441257, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9229, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625534682, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 50}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594625534705, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 50}}
+:::MLLOG {"namespace": "", "time_ms": 1594625534706, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626245861, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8203, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626245862, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626245862, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9318, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626245862, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9259, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626245863, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9217, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626337806, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 51}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594626337838, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 51}}
+:::MLLOG {"namespace": "", "time_ms": 1594626337839, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627084601, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627084603, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627084603, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627084603, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9318, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627084603, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9259, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627180221, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 52}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594627180250, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 52}}
+:::MLLOG {"namespace": "", "time_ms": 1594627180251, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627859629, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8193, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627859632, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627859633, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627859633, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627859633, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9318, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627950129, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 53}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594627950154, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 53}}
+:::MLLOG {"namespace": "", "time_ms": 1594627950155, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628668987, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8201, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628668988, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628668988, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628668988, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628668989, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9135, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628757858, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 54}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594628757881, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 54}}
+:::MLLOG {"namespace": "", "time_ms": 1594628757882, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629466644, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8199, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629466645, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9140, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629466646, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629466646, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629466646, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629558495, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 55}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594629558518, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 55}}
+:::MLLOG {"namespace": "", "time_ms": 1594629558519, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630309925, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8210, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630309926, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9177, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630309927, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9140, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630309927, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630309927, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630405062, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 56}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594630405090, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 56}}
+:::MLLOG {"namespace": "", "time_ms": 1594630405091, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631107609, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631107610, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631107611, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9177, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631107611, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9140, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631107611, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9219, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631199383, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 57}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594631199405, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 57}}
+:::MLLOG {"namespace": "", "time_ms": 1594631199406, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631889552, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8198, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631889553, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9276, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631889553, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631889554, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9177, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631889554, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9140, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631977042, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 58}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594631977082, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 58}}
+:::MLLOG {"namespace": "", "time_ms": 1594631977083, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632629478, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8195, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632629479, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632629479, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9276, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632629480, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632629480, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9177, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632719817, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 59}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594632719841, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 59}}
+:::MLLOG {"namespace": "", "time_ms": 1594632719841, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633443994, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8199, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633443996, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9224, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633443996, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633443996, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9276, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633443996, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633534175, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 60}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594633534197, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 60}}
+:::MLLOG {"namespace": "", "time_ms": 1594633534198, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634245497, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8210, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634245498, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634245499, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9224, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634245499, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634245499, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9276, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634335665, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 61}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594634335687, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 61}}
+:::MLLOG {"namespace": "", "time_ms": 1594634335688, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594634981065, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8208, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594634981066, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594634981067, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594634981067, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9224, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594634981067, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594635067168, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 62}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594635067190, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 62}}
+:::MLLOG {"namespace": "", "time_ms": 1594635067191, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635758713, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8200, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635758714, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9237, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635758715, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635758715, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635758715, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9224, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635846566, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 63}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594635846586, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 63}}
+:::MLLOG {"namespace": "", "time_ms": 1594635846587, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636566054, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8196, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636566055, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636566055, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9237, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636566056, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636566056, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9156, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636654358, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 64}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594636654382, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 64}}
+:::MLLOG {"namespace": "", "time_ms": 1594636654382, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637342016, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8198, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637342018, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9133, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637342018, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637342018, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9237, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637342018, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9188, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637432050, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 65}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594637432074, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 65}}
+:::MLLOG {"namespace": "", "time_ms": 1594637432075, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638174232, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8212, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638174233, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638174234, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9133, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638174234, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638174234, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9237, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638265792, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 66}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594638265815, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 66}}
+:::MLLOG {"namespace": "", "time_ms": 1594638265816, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594638993199, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8205, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594638993201, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594638993201, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594638993201, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9133, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594638993202, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594639084233, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 67}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594639084256, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 67}}
+:::MLLOG {"namespace": "", "time_ms": 1594639084257, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639720958, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8201, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639720959, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9126, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639720959, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639720960, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639720960, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9133, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639803523, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 68}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594639803545, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 68}}
+:::MLLOG {"namespace": "", "time_ms": 1594639803546, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640475950, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8207, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640475951, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9190, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640475952, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9126, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640475952, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640475952, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640562917, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 69}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594640562938, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 69}}
+:::MLLOG {"namespace": "", "time_ms": 1594640562939, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641287482, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8204, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641287483, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9184, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641287484, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9190, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641287484, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9126, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641287484, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9169, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641378716, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 70}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594641378738, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 70}}
+:::MLLOG {"namespace": "", "time_ms": 1594641378739, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594642062001, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 8209, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594642062002, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9187, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594642062003, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9184, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594642062003, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9190, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594642062003, "event_type": "POINT_IN_TIME", "key": "actual_selfplay_games_per_generation", "value": 9126, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594642151184, "event_type": "POINT_IN_TIME", "key": "save_model", "value": {"iteration": 71}, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594642151205, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 71}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158688, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158689, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.00390625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158689, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158689, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158689, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.00390625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158689, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 3}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.00390625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 3}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 3}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.0078125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 5}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158690, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.0234375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 5}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 5}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 6}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.02734375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 6}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 6}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 7}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.015625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 7}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158691, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 7}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 8}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.03515625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 8}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 8}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 9}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.0546875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 9}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 9}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 10}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158692, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.01953125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 10}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 10}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 11}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.03515625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 11}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 11}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 12}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.0390625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 12}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 12}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158693, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 13}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.046875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 13}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 13}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 14}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.0625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 14}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 14}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 15}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.05078125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 15}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158694, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 15}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 16}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.08984375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 16}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 16}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 17}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.08984375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 17}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 17}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158695, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.1015625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.11328125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 19}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.171875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 20}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158696, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.1796875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.234375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.2734375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158697, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 23}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.21875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 24}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.28125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158698, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.3125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.3515625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 27}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.2734375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 28}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158699, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.28125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.296875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.35546875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158700, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 31}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.421875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 32}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.39453125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158701, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.42578125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.3359375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 35}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.44140625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 36}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158702, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.46875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.47265625, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.46875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158703, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 39}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.3828125, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 40}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.4296875, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158704, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.4609375, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158705, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 42}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158705, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158705, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.5, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+:::MLLOG {"namespace": "", "time_ms": 1594646158705, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43}}
+Model 000060 beat target after 36084.614s
+:::MLLOG {"namespace": "", "time_ms": 1594646158705, "event_type": "POINT_IN_TIME", "key": "eval_result", "value": 0.5, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "epoch_num": 43, "timestamp": 36084.614}}
+:::MLLOG {"namespace": "", "time_ms": 1594633534173, "event_type": "INTERVAL_END", "key": "run_stop", "value": null, "metadata": {"file": "./ml_perf/logger.py", "lineno": 27, "status": "success"}}
++ '[' 0 -eq 0 ']'
++ '[' 0 -eq 0 ']'
++ set +x
+Done with benchmark REINFORCEMENT - Minigo
+ENDING TIMING RUN AT 2020-07-13 06:16:02 AM

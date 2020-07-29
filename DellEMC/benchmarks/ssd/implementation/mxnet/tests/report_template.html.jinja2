@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1 style="text-align: center;">{{ title }}</h1>
+    <h2 style="text-align: center;">{{ subtitle }} </h2>
+
+    <div id="toc_container" class="card card-body bg-light">
+        <h1 class="toc_title">Contents</h1>
+            <ul class="toc_list">
+                {% for test in tests %}
+                <li><a href="#{{ test.name }}"> {{ test.name }} </a>
+                <ul>
+                    {% for plot_name in test.plot_names %}
+                        <li><a href="#{{ test.name }}_{{ plot_name | replace(" ", "_") }}"> {{ plot_name }} </a></li>
+                    {% endfor %}
+                </ul>
+                {% endfor %}
+            </ul>
+    </div>
+    <h1 class="toc_title">Tests</h1>
+    {% for test in tests %}
+        <div>
+            <h3 id="{{ test.name }}">{{ test.name }}</h3>
+            <p>Total jobs = {{ test.count }}</p>
+            <p>Successful jobs = {{ test.success }}</p>
+            <p>NaN jobs = {{ test.nans }}</p>
+            <p>Non convergent jobs = {{ test.non_convergent }}</p>
+            <p>Total failed jobs = {{ test.failed }}</p>
+            <p>Success rate = {{ '%0.2f'| format(100 * test.success / test.count|float) }}%</p>
+            <p>
+            {% for plot in test.divs %}
+                <h4 id="{{ test.name }}_{{ test.plot_names[loop.index-1] | replace(" ", "_") }}">{{ test.plot_names[loop.index-1] }}</h4>
+                {{ plot }}
+            {% endfor %}
+            </p>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html> 

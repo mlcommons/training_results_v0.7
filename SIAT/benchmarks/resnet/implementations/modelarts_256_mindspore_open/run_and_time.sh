@@ -1,0 +1,15 @@
+python train.py \
+--batch_size=32 \
+--weight_decay=5e-4 \
+--step_per_epoch=156 \
+--epoch_end=23 \
+--epoch_size=22 \
+--lr_mode=cos_new \
+--frequency=156 \
+--eval_batch_size=200 \
+--eval_interval=2 \
+--loss_scale=64 \
+--damping_init=0.6 \
+--lr_init=1.05 \
+--damping_decay=0.3 \
+--warmup_epoch=5

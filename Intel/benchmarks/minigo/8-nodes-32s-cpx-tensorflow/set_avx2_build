@@ -1,0 +1,62 @@
+#!/bin/bash
+#This file exports the bazel build opts for AVX2 platforms (broadwell and haswell). By setting -march=haswell and -mtune=broadwell, the binary will run on systems haswell and newer, but will be tuned for broadwell.
+
+MIN_GCC_MAJOR_VERSION=5
+MIN_GCC_MINOR_VERSION=3
+MIN_GCC_REVISION=0
+GCC_VERSION_STR=$(gcc -dumpversion)
+echo "GCC Version: ${GCC_VERSION_STR}"
+IFS='.' read -r -a GCC_VERSION <<< ${GCC_VERSION_STR}
+
+if [ "${GCC_VERSION[0]}" -lt "${MIN_GCC_MAJOR_VERSION}" ] ;
+then
+  echo "Your MAJOR version of GCC is too old: ${GCC_VERSION_STR}; it must be at least ${MIN_GCC_MAJOR_VERSION}.${MIN_GCC_MINOR_VERSION}.${MIN_GCC_REVISION}"
+  return 1
+
+elif [ "${GCC_VERSION[0]}" -eq "${MIN_GCC_MAJOR_VERSION}" ] ;
+then
+    if [ "${GCC_VERSION[1]}" -lt "${MIN_GCC_MINOR_VERSION}" ] ;
+    then
+      echo "Your MINOR version of GCC is too old: ${GCC_VERSION_STR}; it must be at least ${MIN_GCC_MAJOR_VERSION}.${MIN_GCC_MINOR_VERSION}."
+      return 1
+    fi
+fi
+
+echo "GCC ${GCC_VERSION_STR}: OK"
+
+#Don't use the C++11 ABI; use the old one 
+#These two options should be equivalent to all the options commented out below
+BAZEL_BUILD_OPTS_BASIC="--cxxopt=-D_GLIBCXX_USE_CXX11_ABI=0 \
+        --copt=-march=haswell \
+        --copt=-mtune=broadwell \
+                --copt=-O3"
+BAZEL_SECURE_BUILD_OPTS="--copt=-Wformat \
+                --copt=-Wformat-security \
+                --copt=-fstack-protector \
+                --copt=-fPIC \
+                --copt=-fpic \
+                --linkopt=-znoexecstack \
+                --linkopt=-zrelro \
+                --linkopt=-znow \
+                --linkopt=-fstack-protector \
+                --linkopt=-pie"
+
+#basic build flags
+echo "exporting BAZEL_BUILD_OPTS_BASIC=${BAZEL_BUILD_OPTS_BASIC}"
+export BAZEL_BUILD_OPTS_BASIC="${BAZEL_BUILD_OPTS_BASIC}"
+
+#secure build flags
+BAZEL_BUILD_OPTS="${BAZEL_BUILD_OPTS_BASIC} ${BAZEL_SECURE_BUILD_OPTS}"
+echo "exporting BAZEL_BUILD_OPTS=${BAZEL_BUILD_OPTS}"
+export BAZEL_BUILD_OPTS="${BAZEL_BUILD_OPTS}"
+
+#basic mkl flags
+BAZEL_MKL_BUILD_OPTS_BASIC="--config=mkl ${BAZEL_BUILD_OPTS_BASIC}"
+echo "exporting BAZEL_MKL_BUILD_OPTS_BASIC=${BAZEL_MKL_BUILD_OPTS_BASIC}"
+export BAZEL_MKL_BUILD_OPTS_BASIC="${BAZEL_MKL_BUILD_OPTS_BASIC}"
+
+#secure mkl flags
+BAZEL_SECURE_MKL_BUILD_OPTS="--config=mkl ${BAZEL_BUILD_OPTS}"
+echo "exporting BAZEL_SECURE_MKL_BUILD_OPTS=${BAZEL_SECURE_MKL_BUILD_OPTS}"
+export BAZEL_SECURE_MKL_BUILD_OPTS="${BAZEL_SECURE_MKL_BUILD_OPTS}"
+

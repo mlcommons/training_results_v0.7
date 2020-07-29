@@ -1,0 +1,1249 @@
++ echo 'Beginning trial 1 of 1'
+Beginning trial 1 of 1
++ srun -N1 -n1 --container-name=image_classification python -c '
+import mlperf_log_utils
+from mlperf_logging.mllog import constants
+mlperf_log_utils.mlperf_submission_log(constants.RESNET)'
+slurmstepd: pyxis: reusing existing container filesystem
+slurmstepd: pyxis: starting container ...
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+:::MLLOG {"namespace": "", "time_ms": 1592669719238, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "resnet", "metadata": {"file": "/workspace/image_classification/mlperf_log_utils.py", "lineno": 72}}
+:::MLLOG {"namespace": "", "time_ms": 1592669719244, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "NVIDIA", "metadata": {"file": "/workspace/image_classification/mlperf_log_utils.py", "lineno": 77}}
+:::MLLOG {"namespace": "", "time_ms": 1592669719244, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/workspace/image_classification/mlperf_log_utils.py", "lineno": 81}}
+:::MLLOG {"namespace": "", "time_ms": 1592669719244, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/workspace/image_classification/mlperf_log_utils.py", "lineno": 85}}
+:::MLLOG {"namespace": "", "time_ms": 1592669719244, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "1xNVIDIA DGX-2H", "metadata": {"file": "/workspace/image_classification/mlperf_log_utils.py", "lineno": 89}}
++ '[' 1 -eq 1 ']'
++ srun --ntasks=1 bash -c 'echo -n '\''Clearing cache on '\'' && hostname && sync && sudo /sbin/sysctl vm.drop_caches=3'
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+Clearing cache on circe-n046
+vm.drop_caches = 3
++ srun --ntasks=1 --container-name=image_classification python -c '
+from mlperf_logging.mllog import constants
+from mlperf_log_utils import mx_resnet_print_event
+mx_resnet_print_event(key=constants.CACHE_CLEAR, val=True)'
+slurmstepd: pyxis: reusing existing container filesystem
+slurmstepd: pyxis: starting container ...
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+:::MLLOG {"namespace": "", "time_ms": 1592669726324, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": true, "metadata": {"file": "<string>", "lineno": 4}}
++ export SEED=23547
++ SEED=23547
++ srun --kill-on-bad-exit=0 --mpi=pmix --ntasks=16 --ntasks-per-node=16 --container-name=image_classification --container-mounts=/raid/datasets/train-val-recordio-passthrough:/data,/gpfs/fs1/svcnvdlfw/13963794/results:/results ./run_and_time.sh
+slurmstepd: pyxis: reusing existing container filesystem
+slurmstepd: pyxis: starting container ...
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+slurmstepd: task_p_pre_launch: Using sched_affinity for tasks
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+running benchmark
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+STARTING TIMING RUN AT 2020-06-20 09:15:30 AM
+running benchmark
+running benchmark
+running benchmark
+running benchmark
+running benchmark
+running benchmark
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=30-32,78-80 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=39-41,87-89 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=3-5,51-53 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=18-20,66-68 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=24-26,72-74 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=6-8,54-56 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
+num_sockets = 2 num_nodes=2 cores_per_socket=24
+num_sockets = 2 num_nodes=2 cores_per_socket=24
+num_sockets = 2 num_nodes=2 cores_per_socket=24
+num_sockets = 2 num_nodes=2 cores_per_socket=24
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=45-47,93-95 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
++ exec numactl --physcpubind=42-44,90-92 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
++ exec numactl --physcpubind=12-14,60-62 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=21-23,69-71 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=33-35,81-83 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+num_sockets = 2 num_nodes=2 cores_per_socket=24
+num_sockets = 2 num_nodes=2 cores_per_socket=24
++ exec numactl --physcpubind=0-2,48-50 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
++ exec numactl --physcpubind=15-17,63-65 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
++ exec numactl --physcpubind=36-38,84-86 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
++ exec numactl --physcpubind=9-11,57-59 --membind=0 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
++ exec numactl --physcpubind=27-29,75-77 --membind=1 -- python train_imagenet.py --gpus 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --batch-size 208 --kv-store horovod --lr 6 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.0 --label-smoothing 0.1 --wd 2.5e-05 --warmup-epochs 5 --eval-period 4 --eval-offset 0 --optimizer sgd --network resnet-v1b-dbar-fl --num-layers 50 --num-epochs 42 --accuracy-threshold 0.759 --seed 23547 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0.0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --dali-threads 3 --dali-cache-size 0 --dali-roi-decode 1 --profile 0 --use-dali
+:::MLLOG {"namespace": "", "time_ms": 1592669733163, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733163, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733163, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733163, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733163, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733163, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733164, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733167, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733167, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733165, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733168, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733169, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733168, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733168, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733169, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669733168, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 83}}
+:::MLLOG {"namespace": "", "time_ms": 1592669746556, "event_type": "POINT_IN_TIME", "key": "seed", "value": 23547, "metadata": {"file": "train_imagenet.py", "lineno": 139}}
+:::MLLOG {"namespace": "", "time_ms": 1592669746567, "event_type": "POINT_IN_TIME", "key": "model_bn_span", "value": 208, "metadata": {"file": "/workspace/image_classification/common/dali.py", "lineno": 250}}
+NCCL version 2.7.5+cuda11.0
+:::MLLOG {"namespace": "", "time_ms": 1592669757961, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "train_imagenet.py", "lineno": 193}}
+2020-06-20 09:15:57,961 Node[1] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='1', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=1, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=32600, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,961 Node[2] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='2', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=2, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=4537, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[4] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='4', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=4, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=51645, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,961 Node[3] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='3', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=3, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=34444, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[5] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='5', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=5, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=6115, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[0] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='0', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=0, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=30460, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[7] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='7', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=7, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=32965, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[11] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='11', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=11, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=64598, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[15] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='15', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=15, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=63575, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[6] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='6', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=6, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=43533, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[8] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='8', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=8, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=2318, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[10] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='10', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=10, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=28070, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[12] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='12', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=12, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=29293, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[13] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='13', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=13, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=55795, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[14] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='14', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=14, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=51740, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+2020-06-20 09:15:57,962 Node[9] start with arguments Namespace(accuracy_threshold=0.759, batch_size=208, batchnorm_eps=1e-05, batchnorm_layout='NHWC', batchnorm_mom=0.9, bn_gamma_init0=False, bn_group=1, conv_algo=1, conv_layout='NHWC', custom_bn_off=0, dali_bytes_per_sample_hint=10485760, dali_cache_size=0, dali_dont_use_mmap=0, dali_hw_decoder_load=0.0, dali_nvjpeg_memory_padding=256, dali_prefetch_queue=5, dali_roi_decode=True, dali_temp_buffer_hint=10485760, dali_threads=3, data_train='/data/train.rec', data_train_idx='/data/train.idx', data_val='/data/val.rec', data_val_idx='/data/val.idx', disp_batches=20, dtype='float16', epoch_size=0, eval_offset=0, eval_period=4, force_tensor_core=1, fuse_bn_add_relu=1, fuse_bn_relu=1, gpus='9', image_shape='4,224,224', initializer='default', input_layout='NHWC', kv_store='horovod', label_smoothing=0.1, lars_eps=0, lars_eta=0.0, lazy_init_sanity=False, local_rank=9, log='', logging_dir='logs', lr=6.0, lr_factor=0.1, lr_step_epochs='pow2', max_random_area=1.0, max_random_aspect_ratio=1.3333333333333333, min_random_area=0.05, min_random_aspect_ratio=0.75, model_prefix=None, mom=0.9, network='resnet-v1b-dbar-fl', num_classes=1000, num_epochs=42, num_examples=1281167, num_layers=50, optimizer='sgd', pooling_layout='NHWC', profile=0, profile_server_suffix='', profile_worker_suffix='', resize=256, save_period=1, seed=11515, separ_val=False, top_k=0, use_dali=True, verbose=0, warmup_epochs=5, warmup_strategy='linear', wd=2.5e-05)
+:::MLLOG {"namespace": "", "time_ms": 1592669757962, "event_type": "POINT_IN_TIME", "key": "sgd_opt_learning_rate_decay_poly_power", "value": 2, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 690}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "sgd_opt_end_learning_rate", "value": 0.0001, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 691}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "lars_opt_learning_rate_decay_poly_power", "value": 2, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 692}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "lars_opt_end_learning_rate", "value": 0.0001, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 693}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "global_batch_size", "value": 3328, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1190}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "opt_name", "value": "sgd", "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1208}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "sgd_opt_weight_decay", "value": 2.5e-05, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1211}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "sgd_opt_momentum", "value": 0.9, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1212}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "sgd_opt_learning_rate_decay_steps", "value": 42, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1213}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757963, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_epochs", "value": 5, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1214}}
+:::MLLOG {"namespace": "", "time_ms": 1592669757964, "event_type": "POINT_IN_TIME", "key": "sgd_opt_base_learning_rate", "value": 6.0, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1215}}
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+[09:16:02] src/imperative/./../executor/cuda_graphs.h:289: Created CUDA graphs.
+:::MLLOG {"namespace": "", "time_ms": 1592669762826, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1260}}
+:::MLLOG {"namespace": "", "time_ms": 1592669762827, "event_type": "POINT_IN_TIME", "key": "train_samples", "value": 1281167, "metadata": {"file": "/workspace/image_classification/common/dali.py", "lineno": 340}}
+:::MLLOG {"namespace": "", "time_ms": 1592669766580, "event_type": "POINT_IN_TIME", "key": "eval_samples", "value": 50000, "metadata": {"file": "/workspace/image_classification/common/dali.py", "lineno": 348}}
+:::MLLOG {"namespace": "", "time_ms": 1592669767728, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 878, "first_epoch_num": 1, "epoch_count": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1592669767728, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 1}}
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:16:11,204 Node[0] Epoch[0] Batch [0-20]	Speed: 19464.84 samples/sec	accuracy=0.001832
+2020-06-20 09:16:14,525 Node[0] Epoch[0] Batch [20-40]	Speed: 20044.05 samples/sec	accuracy=0.001683
+2020-06-20 09:16:17,721 Node[0] Epoch[0] Batch [40-60]	Speed: 20827.64 samples/sec	accuracy=0.000721
+2020-06-20 09:16:20,973 Node[0] Epoch[0] Batch [60-80]	Speed: 20465.33 samples/sec	accuracy=0.000481
+2020-06-20 09:16:24,285 Node[0] Epoch[0] Batch [80-100]	Speed: 20098.59 samples/sec	accuracy=0.000962
+2020-06-20 09:16:27,534 Node[0] Epoch[0] Batch [100-120]	Speed: 20490.57 samples/sec	accuracy=0.001202
+2020-06-20 09:16:30,827 Node[0] Epoch[0] Batch [120-140]	Speed: 20213.94 samples/sec	accuracy=0.001442
+2020-06-20 09:16:34,033 Node[0] Epoch[0] Batch [140-160]	Speed: 20761.55 samples/sec	accuracy=0.001202
+2020-06-20 09:16:37,366 Node[0] Epoch[0] Batch [160-180]	Speed: 19973.23 samples/sec	accuracy=0.000481
+2020-06-20 09:16:40,621 Node[0] Epoch[0] Batch [180-200]	Speed: 20445.40 samples/sec	accuracy=0.001683
+2020-06-20 09:16:43,932 Node[0] Epoch[0] Batch [200-220]	Speed: 20105.06 samples/sec	accuracy=0.000240
+2020-06-20 09:16:47,187 Node[0] Epoch[0] Batch [220-240]	Speed: 20454.46 samples/sec	accuracy=0.000962
+2020-06-20 09:16:50,496 Node[0] Epoch[0] Batch [240-260]	Speed: 20114.77 samples/sec	accuracy=0.000962
+2020-06-20 09:16:53,695 Node[0] Epoch[0] Batch [260-280]	Speed: 20806.97 samples/sec	accuracy=0.001683
+2020-06-20 09:16:56,946 Node[0] Epoch[0] Batch [280-300]	Speed: 20473.02 samples/sec	accuracy=0.000721
+2020-06-20 09:17:00,286 Node[0] Epoch[0] Batch [300-320]	Speed: 19931.06 samples/sec	accuracy=0.000721
+2020-06-20 09:17:03,572 Node[0] Epoch[0] Batch [320-340]	Speed: 20258.24 samples/sec	accuracy=0.001442
+2020-06-20 09:17:06,852 Node[0] Epoch[0] Batch [340-360]	Speed: 20291.97 samples/sec	accuracy=0.000721
+2020-06-20 09:17:09,912 Node[0] Epoch[0] Batch [360-380]	Speed: 21754.80 samples/sec	accuracy=0.000481
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[9] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[10] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[12] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[4] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[1] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[2] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[3] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[6] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[7] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[8] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[14] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,452 Node[5] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,452 Node[11] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,451 Node[13] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+/workspace/image_classification/common/fit.py:1248: UserWarning: Optimizer created manually outside Module but rescale_grad is not normalized to 1.0/batch_size/num_workers (0.00030048076923076925 vs. 0.004807692307692308). Is this intended?
+  optimizer_params = optimizer_params)
+2020-06-20 09:17:10,452 Node[15] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+:::MLLOG {"namespace": "", "time_ms": 1592669830452, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 1}}
+2020-06-20 09:17:10,452 Node[0] Epoch[0] Time cost=62.723
+:::MLLOG {"namespace": "", "time_ms": 1592669830452, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 1}}
+2020-06-20 09:17:10,452 Node[0] DALI iterator does not support resetting while epoch is not finished. Ignoring...
+2020-06-20 09:17:12,134 Node[0] Epoch[0] Validation-accuracy=0.036800
+2020-06-20 09:17:12,134 Node[0] Epoch[0] Validation-correct-count=115.000000
+2020-06-20 09:17:12,134 Node[0] Epoch[0] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592669832178, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1592669832179, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.0336, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1592669832179, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1592669832179, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 2, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592669832179, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 2}}
+2020-06-20 09:17:15,165 Node[0] Epoch[1] Batch [0-20]	Speed: 22616.12 samples/sec	accuracy=0.001145
+2020-06-20 09:17:17,805 Node[0] Epoch[1] Batch [20-40]	Speed: 25215.69 samples/sec	accuracy=0.000962
+2020-06-20 09:17:20,455 Node[0] Epoch[1] Batch [40-60]	Speed: 25120.14 samples/sec	accuracy=0.001202
+2020-06-20 09:17:23,078 Node[0] Epoch[1] Batch [60-80]	Speed: 25376.18 samples/sec	accuracy=0.001202
+2020-06-20 09:17:25,690 Node[0] Epoch[1] Batch [80-100]	Speed: 25487.04 samples/sec	accuracy=0.000721
+2020-06-20 09:17:28,340 Node[0] Epoch[1] Batch [100-120]	Speed: 25121.45 samples/sec	accuracy=0.000962
+2020-06-20 09:17:30,985 Node[0] Epoch[1] Batch [120-140]	Speed: 25160.42 samples/sec	accuracy=0.000481
+2020-06-20 09:17:33,597 Node[0] Epoch[1] Batch [140-160]	Speed: 25489.63 samples/sec	accuracy=0.001202
+2020-06-20 09:17:36,214 Node[0] Epoch[1] Batch [160-180]	Speed: 25430.66 samples/sec	accuracy=0.000481
+2020-06-20 09:17:38,844 Node[0] Epoch[1] Batch [180-200]	Speed: 25316.36 samples/sec	accuracy=0.001202
+2020-06-20 09:17:41,468 Node[0] Epoch[1] Batch [200-220]	Speed: 25364.46 samples/sec	accuracy=0.000721
+2020-06-20 09:17:44,104 Node[0] Epoch[1] Batch [220-240]	Speed: 25249.59 samples/sec	accuracy=0.001202
+2020-06-20 09:17:46,731 Node[0] Epoch[1] Batch [240-260]	Speed: 25341.30 samples/sec	accuracy=0.000962
+2020-06-20 09:17:49,381 Node[0] Epoch[1] Batch [260-280]	Speed: 25120.87 samples/sec	accuracy=0.001202
+2020-06-20 09:17:52,012 Node[0] Epoch[1] Batch [280-300]	Speed: 25300.60 samples/sec	accuracy=0.001202
+2020-06-20 09:17:54,630 Node[0] Epoch[1] Batch [300-320]	Speed: 25426.43 samples/sec	accuracy=0.000962
+2020-06-20 09:17:57,259 Node[0] Epoch[1] Batch [320-340]	Speed: 25318.35 samples/sec	accuracy=0.000481
+2020-06-20 09:17:59,906 Node[0] Epoch[1] Batch [340-360]	Speed: 25148.32 samples/sec	accuracy=0.000481
+2020-06-20 09:18:02,540 Node[0] Epoch[1] Batch [360-380]	Speed: 25275.93 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592669883071, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 2}}
+2020-06-20 09:18:03,071 Node[0] Epoch[1] Time cost=50.892
+:::MLLOG {"namespace": "", "time_ms": 1592669883071, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 3}}
+2020-06-20 09:18:05,839 Node[0] Epoch[2] Batch [0-20]	Speed: 25238.53 samples/sec	accuracy=0.000458
+2020-06-20 09:18:08,459 Node[0] Epoch[2] Batch [20-40]	Speed: 25406.94 samples/sec	accuracy=0.001202
+2020-06-20 09:18:11,085 Node[0] Epoch[2] Batch [40-60]	Speed: 25350.33 samples/sec	accuracy=0.000721
+2020-06-20 09:18:13,709 Node[0] Epoch[2] Batch [60-80]	Speed: 25373.01 samples/sec	accuracy=0.001442
+2020-06-20 09:18:16,331 Node[0] Epoch[2] Batch [80-100]	Speed: 25389.68 samples/sec	accuracy=0.001442
+2020-06-20 09:18:18,973 Node[0] Epoch[2] Batch [100-120]	Speed: 25191.19 samples/sec	accuracy=0.001202
+2020-06-20 09:18:21,600 Node[0] Epoch[2] Batch [120-140]	Speed: 25335.87 samples/sec	accuracy=0.001923
+2020-06-20 09:18:24,220 Node[0] Epoch[2] Batch [140-160]	Speed: 25407.41 samples/sec	accuracy=0.000481
+2020-06-20 09:18:26,853 Node[0] Epoch[2] Batch [160-180]	Speed: 25286.70 samples/sec	accuracy=0.000240
+2020-06-20 09:18:29,506 Node[0] Epoch[2] Batch [180-200]	Speed: 25087.89 samples/sec	accuracy=0.000962
+2020-06-20 09:18:32,134 Node[0] Epoch[2] Batch [200-220]	Speed: 25329.93 samples/sec	accuracy=0.001442
+2020-06-20 09:18:34,787 Node[0] Epoch[2] Batch [220-240]	Speed: 25086.63 samples/sec	accuracy=0.001442
+2020-06-20 09:18:37,404 Node[0] Epoch[2] Batch [240-260]	Speed: 25436.96 samples/sec	accuracy=0.002404
+2020-06-20 09:18:40,034 Node[0] Epoch[2] Batch [260-280]	Speed: 25316.66 samples/sec	accuracy=0.001202
+2020-06-20 09:18:42,685 Node[0] Epoch[2] Batch [280-300]	Speed: 25110.04 samples/sec	accuracy=0.000962
+2020-06-20 09:18:45,310 Node[0] Epoch[2] Batch [300-320]	Speed: 25350.93 samples/sec	accuracy=0.001442
+2020-06-20 09:18:47,945 Node[0] Epoch[2] Batch [320-340]	Speed: 25268.56 samples/sec	accuracy=0.000481
+2020-06-20 09:18:50,590 Node[0] Epoch[2] Batch [340-360]	Speed: 25165.50 samples/sec	accuracy=0.000240
+2020-06-20 09:18:53,220 Node[0] Epoch[2] Batch [360-380]	Speed: 25312.16 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592669933757, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 3}}
+2020-06-20 09:18:53,758 Node[0] Epoch[2] Time cost=50.686
+:::MLLOG {"namespace": "", "time_ms": 1592669933758, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 4}}
+2020-06-20 09:18:56,518 Node[0] Epoch[3] Batch [0-20]	Speed: 25330.86 samples/sec	accuracy=0.000687
+2020-06-20 09:18:59,165 Node[0] Epoch[3] Batch [20-40]	Speed: 25145.54 samples/sec	accuracy=0.001202
+2020-06-20 09:19:01,788 Node[0] Epoch[3] Batch [40-60]	Speed: 25379.17 samples/sec	accuracy=0.000721
+2020-06-20 09:19:04,405 Node[0] Epoch[3] Batch [60-80]	Speed: 25430.55 samples/sec	accuracy=0.001923
+2020-06-20 09:19:07,030 Node[0] Epoch[3] Batch [80-100]	Speed: 25364.17 samples/sec	accuracy=0.001683
+2020-06-20 09:19:09,679 Node[0] Epoch[3] Batch [100-120]	Speed: 25128.75 samples/sec	accuracy=0.001442
+2020-06-20 09:19:12,316 Node[0] Epoch[3] Batch [120-140]	Speed: 25244.21 samples/sec	accuracy=0.000962
+2020-06-20 09:19:14,941 Node[0] Epoch[3] Batch [140-160]	Speed: 25354.82 samples/sec	accuracy=0.000721
+2020-06-20 09:19:17,576 Node[0] Epoch[3] Batch [160-180]	Speed: 25258.48 samples/sec	accuracy=0.000721
+2020-06-20 09:19:20,214 Node[0] Epoch[3] Batch [180-200]	Speed: 25233.51 samples/sec	accuracy=0.001923
+2020-06-20 09:19:22,850 Node[0] Epoch[3] Batch [200-220]	Speed: 25252.91 samples/sec	accuracy=0.001442
+2020-06-20 09:19:25,486 Node[0] Epoch[3] Batch [220-240]	Speed: 25257.09 samples/sec	accuracy=0.001442
+2020-06-20 09:19:28,119 Node[0] Epoch[3] Batch [240-260]	Speed: 25280.16 samples/sec	accuracy=0.000721
+2020-06-20 09:19:30,742 Node[0] Epoch[3] Batch [260-280]	Speed: 25381.27 samples/sec	accuracy=0.000962
+2020-06-20 09:19:33,379 Node[0] Epoch[3] Batch [280-300]	Speed: 25241.16 samples/sec	accuracy=0.000240
+2020-06-20 09:19:36,011 Node[0] Epoch[3] Batch [300-320]	Speed: 25288.80 samples/sec	accuracy=0.000481
+2020-06-20 09:19:38,661 Node[0] Epoch[3] Batch [320-340]	Speed: 25117.89 samples/sec	accuracy=0.001202
+2020-06-20 09:19:41,297 Node[0] Epoch[3] Batch [340-360]	Speed: 25250.05 samples/sec	accuracy=0.001442
+2020-06-20 09:19:43,924 Node[0] Epoch[3] Batch [360-380]	Speed: 25343.30 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592669984443, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 4}}
+2020-06-20 09:19:44,443 Node[0] Epoch[3] Time cost=50.685
+:::MLLOG {"namespace": "", "time_ms": 1592669984443, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 5}}
+2020-06-20 09:19:47,201 Node[0] Epoch[4] Batch [0-20]	Speed: 25404.20 samples/sec	accuracy=0.000687
+2020-06-20 09:19:49,836 Node[0] Epoch[4] Batch [20-40]	Speed: 25267.23 samples/sec	accuracy=0.000721
+2020-06-20 09:19:52,490 Node[0] Epoch[4] Batch [40-60]	Speed: 25077.13 samples/sec	accuracy=0.000721
+2020-06-20 09:19:55,112 Node[0] Epoch[4] Batch [60-80]	Speed: 25387.25 samples/sec	accuracy=0.001202
+2020-06-20 09:19:57,741 Node[0] Epoch[4] Batch [80-100]	Speed: 25323.27 samples/sec	accuracy=0.001442
+2020-06-20 09:20:00,366 Node[0] Epoch[4] Batch [100-120]	Speed: 25354.04 samples/sec	accuracy=0.001923
+2020-06-20 09:20:03,002 Node[0] Epoch[4] Batch [120-140]	Speed: 25257.53 samples/sec	accuracy=0.001202
+2020-06-20 09:20:05,616 Node[0] Epoch[4] Batch [140-160]	Speed: 25459.39 samples/sec	accuracy=0.001683
+2020-06-20 09:20:08,243 Node[0] Epoch[4] Batch [160-180]	Speed: 25339.83 samples/sec	accuracy=0.000721
+2020-06-20 09:20:10,871 Node[0] Epoch[4] Batch [180-200]	Speed: 25328.41 samples/sec	accuracy=0.000721
+2020-06-20 09:20:13,516 Node[0] Epoch[4] Batch [200-220]	Speed: 25170.97 samples/sec	accuracy=0.000481
+2020-06-20 09:20:16,161 Node[0] Epoch[4] Batch [220-240]	Speed: 25163.91 samples/sec	accuracy=0.000481
+2020-06-20 09:20:18,811 Node[0] Epoch[4] Batch [240-260]	Speed: 25117.92 samples/sec	accuracy=0.000240
+2020-06-20 09:20:21,441 Node[0] Epoch[4] Batch [260-280]	Speed: 25313.45 samples/sec	accuracy=0.000962
+2020-06-20 09:20:24,056 Node[0] Epoch[4] Batch [280-300]	Speed: 25451.48 samples/sec	accuracy=0.001442
+2020-06-20 09:20:26,687 Node[0] Epoch[4] Batch [300-320]	Speed: 25303.15 samples/sec	accuracy=0.000000
+2020-06-20 09:20:29,334 Node[0] Epoch[4] Batch [320-340]	Speed: 25150.61 samples/sec	accuracy=0.001683
+2020-06-20 09:20:31,975 Node[0] Epoch[4] Batch [340-360]	Speed: 25203.70 samples/sec	accuracy=0.001202
+2020-06-20 09:20:34,601 Node[0] Epoch[4] Batch [360-380]	Speed: 25349.62 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592670035121, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 5}}
+2020-06-20 09:20:35,121 Node[0] Epoch[4] Time cost=50.678
+:::MLLOG {"namespace": "", "time_ms": 1592670035121, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 5}}
+2020-06-20 09:20:36,617 Node[0] Epoch[4] Validation-accuracy=0.351360
+2020-06-20 09:20:36,617 Node[0] Epoch[4] Validation-correct-count=1098.000000
+2020-06-20 09:20:36,617 Node[0] Epoch[4] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592670036761, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 5}}
+:::MLLOG {"namespace": "", "time_ms": 1592670036761, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.3434, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 5}}
+:::MLLOG {"namespace": "", "time_ms": 1592670036761, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1592670036761, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 6, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592670036762, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 6}}
+2020-06-20 09:20:39,750 Node[0] Epoch[5] Batch [0-20]	Speed: 22623.32 samples/sec	accuracy=0.002518
+2020-06-20 09:20:42,372 Node[0] Epoch[5] Batch [20-40]	Speed: 25390.29 samples/sec	accuracy=0.000962
+2020-06-20 09:20:44,989 Node[0] Epoch[5] Batch [40-60]	Speed: 25438.61 samples/sec	accuracy=0.001683
+2020-06-20 09:20:47,625 Node[0] Epoch[5] Batch [60-80]	Speed: 25253.02 samples/sec	accuracy=0.001202
+2020-06-20 09:20:50,259 Node[0] Epoch[5] Batch [80-100]	Speed: 25269.17 samples/sec	accuracy=0.001202
+2020-06-20 09:20:52,906 Node[0] Epoch[5] Batch [100-120]	Speed: 25149.62 samples/sec	accuracy=0.000240
+2020-06-20 09:20:55,552 Node[0] Epoch[5] Batch [120-140]	Speed: 25158.66 samples/sec	accuracy=0.000721
+2020-06-20 09:20:58,176 Node[0] Epoch[5] Batch [140-160]	Speed: 25366.26 samples/sec	accuracy=0.000481
+2020-06-20 09:21:00,803 Node[0] Epoch[5] Batch [160-180]	Speed: 25333.25 samples/sec	accuracy=0.000721
+2020-06-20 09:21:03,449 Node[0] Epoch[5] Batch [180-200]	Speed: 25164.48 samples/sec	accuracy=0.000962
+2020-06-20 09:21:06,075 Node[0] Epoch[5] Batch [200-220]	Speed: 25342.73 samples/sec	accuracy=0.002404
+2020-06-20 09:21:08,724 Node[0] Epoch[5] Batch [220-240]	Speed: 25126.07 samples/sec	accuracy=0.001202
+2020-06-20 09:21:11,363 Node[0] Epoch[5] Batch [240-260]	Speed: 25228.48 samples/sec	accuracy=0.000240
+2020-06-20 09:21:13,991 Node[0] Epoch[5] Batch [260-280]	Speed: 25332.42 samples/sec	accuracy=0.000481
+2020-06-20 09:21:16,623 Node[0] Epoch[5] Batch [280-300]	Speed: 25283.82 samples/sec	accuracy=0.000962
+2020-06-20 09:21:19,262 Node[0] Epoch[5] Batch [300-320]	Speed: 25225.21 samples/sec	accuracy=0.001923
+2020-06-20 09:21:21,887 Node[0] Epoch[5] Batch [320-340]	Speed: 25365.23 samples/sec	accuracy=0.001683
+2020-06-20 09:21:24,505 Node[0] Epoch[5] Batch [340-360]	Speed: 25423.27 samples/sec	accuracy=0.000962
+2020-06-20 09:21:27,142 Node[0] Epoch[5] Batch [360-380]	Speed: 25239.63 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592670087660, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 6}}
+2020-06-20 09:21:27,660 Node[0] Epoch[5] Time cost=50.899
+:::MLLOG {"namespace": "", "time_ms": 1592670087660, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 7}}
+2020-06-20 09:21:30,430 Node[0] Epoch[6] Batch [0-20]	Speed: 25256.67 samples/sec	accuracy=0.001145
+2020-06-20 09:21:33,059 Node[0] Epoch[6] Batch [20-40]	Speed: 25318.11 samples/sec	accuracy=0.000721
+2020-06-20 09:21:35,687 Node[0] Epoch[6] Batch [40-60]	Speed: 25326.21 samples/sec	accuracy=0.001202
+2020-06-20 09:21:38,320 Node[0] Epoch[6] Batch [60-80]	Speed: 25284.99 samples/sec	accuracy=0.001202
+2020-06-20 09:21:40,970 Node[0] Epoch[6] Batch [80-100]	Speed: 25123.77 samples/sec	accuracy=0.001202
+2020-06-20 09:21:43,606 Node[0] Epoch[6] Batch [100-120]	Speed: 25247.05 samples/sec	accuracy=0.000481
+2020-06-20 09:21:46,239 Node[0] Epoch[6] Batch [120-140]	Speed: 25285.00 samples/sec	accuracy=0.002644
+2020-06-20 09:21:48,894 Node[0] Epoch[6] Batch [140-160]	Speed: 25069.29 samples/sec	accuracy=0.000962
+2020-06-20 09:21:51,515 Node[0] Epoch[6] Batch [160-180]	Speed: 25401.60 samples/sec	accuracy=0.001923
+2020-06-20 09:21:54,139 Node[0] Epoch[6] Batch [180-200]	Speed: 25363.56 samples/sec	accuracy=0.001202
+2020-06-20 09:21:56,751 Node[0] Epoch[6] Batch [200-220]	Speed: 25484.55 samples/sec	accuracy=0.001202
+2020-06-20 09:21:59,390 Node[0] Epoch[6] Batch [220-240]	Speed: 25228.04 samples/sec	accuracy=0.000962
+2020-06-20 09:22:02,012 Node[0] Epoch[6] Batch [240-260]	Speed: 25389.27 samples/sec	accuracy=0.000240
+2020-06-20 09:22:04,635 Node[0] Epoch[6] Batch [260-280]	Speed: 25375.79 samples/sec	accuracy=0.001442
+2020-06-20 09:22:07,277 Node[0] Epoch[6] Batch [280-300]	Speed: 25192.96 samples/sec	accuracy=0.000962
+2020-06-20 09:22:09,913 Node[0] Epoch[6] Batch [300-320]	Speed: 25255.85 samples/sec	accuracy=0.001683
+2020-06-20 09:22:12,566 Node[0] Epoch[6] Batch [320-340]	Speed: 25083.08 samples/sec	accuracy=0.000721
+2020-06-20 09:22:15,210 Node[0] Epoch[6] Batch [340-360]	Speed: 25180.67 samples/sec	accuracy=0.000721
+2020-06-20 09:22:17,852 Node[0] Epoch[6] Batch [360-380]	Speed: 25197.69 samples/sec	accuracy=0.001683
+:::MLLOG {"namespace": "", "time_ms": 1592670138370, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 7}}
+2020-06-20 09:22:18,370 Node[0] Epoch[6] Time cost=50.709
+:::MLLOG {"namespace": "", "time_ms": 1592670138370, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 8}}
+2020-06-20 09:22:21,140 Node[0] Epoch[7] Batch [0-20]	Speed: 25265.52 samples/sec	accuracy=0.001603
+2020-06-20 09:22:23,755 Node[0] Epoch[7] Batch [20-40]	Speed: 25456.05 samples/sec	accuracy=0.000481
+2020-06-20 09:22:26,401 Node[0] Epoch[7] Batch [40-60]	Speed: 25165.24 samples/sec	accuracy=0.000962
+2020-06-20 09:22:29,050 Node[0] Epoch[7] Batch [60-80]	Speed: 25125.54 samples/sec	accuracy=0.000721
+2020-06-20 09:22:31,665 Node[0] Epoch[7] Batch [80-100]	Speed: 25460.69 samples/sec	accuracy=0.000962
+2020-06-20 09:22:34,305 Node[0] Epoch[7] Batch [100-120]	Speed: 25213.42 samples/sec	accuracy=0.001442
+2020-06-20 09:22:36,915 Node[0] Epoch[7] Batch [120-140]	Speed: 25501.43 samples/sec	accuracy=0.001923
+2020-06-20 09:22:39,545 Node[0] Epoch[7] Batch [140-160]	Speed: 25307.31 samples/sec	accuracy=0.000481
+2020-06-20 09:22:42,168 Node[0] Epoch[7] Batch [160-180]	Speed: 25380.38 samples/sec	accuracy=0.001683
+2020-06-20 09:22:44,801 Node[0] Epoch[7] Batch [180-200]	Speed: 25279.47 samples/sec	accuracy=0.000240
+2020-06-20 09:22:47,435 Node[0] Epoch[7] Batch [200-220]	Speed: 25277.63 samples/sec	accuracy=0.000962
+2020-06-20 09:22:50,067 Node[0] Epoch[7] Batch [220-240]	Speed: 25290.38 samples/sec	accuracy=0.000721
+2020-06-20 09:22:52,687 Node[0] Epoch[7] Batch [240-260]	Speed: 25406.51 samples/sec	accuracy=0.001442
+2020-06-20 09:22:55,315 Node[0] Epoch[7] Batch [260-280]	Speed: 25322.36 samples/sec	accuracy=0.000000
+2020-06-20 09:22:57,948 Node[0] Epoch[7] Batch [280-300]	Speed: 25283.38 samples/sec	accuracy=0.001442
+2020-06-20 09:23:00,568 Node[0] Epoch[7] Batch [300-320]	Speed: 25408.41 samples/sec	accuracy=0.000481
+2020-06-20 09:23:03,212 Node[0] Epoch[7] Batch [320-340]	Speed: 25179.52 samples/sec	accuracy=0.000240
+2020-06-20 09:23:05,841 Node[0] Epoch[7] Batch [340-360]	Speed: 25313.55 samples/sec	accuracy=0.000721
+2020-06-20 09:23:08,467 Node[0] Epoch[7] Batch [360-380]	Speed: 25348.71 samples/sec	accuracy=0.001442
+:::MLLOG {"namespace": "", "time_ms": 1592670188982, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 8}}
+2020-06-20 09:23:08,982 Node[0] Epoch[7] Time cost=50.612
+:::MLLOG {"namespace": "", "time_ms": 1592670188982, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 9}}
+2020-06-20 09:23:11,759 Node[0] Epoch[8] Batch [0-20]	Speed: 25219.30 samples/sec	accuracy=0.001145
+2020-06-20 09:23:14,375 Node[0] Epoch[8] Batch [20-40]	Speed: 25447.13 samples/sec	accuracy=0.000240
+2020-06-20 09:23:17,004 Node[0] Epoch[8] Batch [40-60]	Speed: 25321.08 samples/sec	accuracy=0.000481
+2020-06-20 09:23:19,631 Node[0] Epoch[8] Batch [60-80]	Speed: 25334.98 samples/sec	accuracy=0.000721
+2020-06-20 09:23:22,264 Node[0] Epoch[8] Batch [80-100]	Speed: 25282.22 samples/sec	accuracy=0.001202
+2020-06-20 09:23:24,877 Node[0] Epoch[8] Batch [100-120]	Speed: 25473.80 samples/sec	accuracy=0.000721
+2020-06-20 09:23:27,519 Node[0] Epoch[8] Batch [120-140]	Speed: 25203.86 samples/sec	accuracy=0.000962
+2020-06-20 09:23:30,173 Node[0] Epoch[8] Batch [140-160]	Speed: 25078.99 samples/sec	accuracy=0.000721
+2020-06-20 09:23:32,793 Node[0] Epoch[8] Batch [160-180]	Speed: 25405.25 samples/sec	accuracy=0.000962
+2020-06-20 09:23:35,414 Node[0] Epoch[8] Batch [180-200]	Speed: 25396.50 samples/sec	accuracy=0.001202
+2020-06-20 09:23:38,041 Node[0] Epoch[8] Batch [200-220]	Speed: 25335.44 samples/sec	accuracy=0.000481
+2020-06-20 09:23:40,681 Node[0] Epoch[8] Batch [220-240]	Speed: 25217.03 samples/sec	accuracy=0.001202
+2020-06-20 09:23:43,310 Node[0] Epoch[8] Batch [240-260]	Speed: 25318.77 samples/sec	accuracy=0.000962
+2020-06-20 09:23:45,936 Node[0] Epoch[8] Batch [260-280]	Speed: 25347.62 samples/sec	accuracy=0.001202
+2020-06-20 09:23:48,577 Node[0] Epoch[8] Batch [280-300]	Speed: 25210.06 samples/sec	accuracy=0.000721
+2020-06-20 09:23:51,213 Node[0] Epoch[8] Batch [300-320]	Speed: 25250.44 samples/sec	accuracy=0.000962
+2020-06-20 09:23:53,845 Node[0] Epoch[8] Batch [320-340]	Speed: 25286.35 samples/sec	accuracy=0.000962
+2020-06-20 09:23:56,467 Node[0] Epoch[8] Batch [340-360]	Speed: 25388.83 samples/sec	accuracy=0.000962
+2020-06-20 09:23:59,102 Node[0] Epoch[8] Batch [360-380]	Speed: 25265.56 samples/sec	accuracy=0.001442
+:::MLLOG {"namespace": "", "time_ms": 1592670239636, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 9}}
+2020-06-20 09:23:59,636 Node[0] Epoch[8] Time cost=50.654
+:::MLLOG {"namespace": "", "time_ms": 1592670239636, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 9}}
+2020-06-20 09:24:01,271 Node[0] Epoch[8] Validation-accuracy=0.506560
+2020-06-20 09:24:01,271 Node[0] Epoch[8] Validation-correct-count=1583.000000
+2020-06-20 09:24:01,271 Node[0] Epoch[8] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592670241315, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 9}}
+:::MLLOG {"namespace": "", "time_ms": 1592670241315, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.49352, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 9}}
+:::MLLOG {"namespace": "", "time_ms": 1592670241315, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 6}}
+:::MLLOG {"namespace": "", "time_ms": 1592670241315, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 10, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592670241315, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 10}}
+2020-06-20 09:24:04,276 Node[0] Epoch[9] Batch [0-20]	Speed: 22810.81 samples/sec	accuracy=0.000687
+2020-06-20 09:24:06,913 Node[0] Epoch[9] Batch [20-40]	Speed: 25240.08 samples/sec	accuracy=0.001202
+2020-06-20 09:24:09,560 Node[0] Epoch[9] Batch [40-60]	Speed: 25155.32 samples/sec	accuracy=0.001202
+2020-06-20 09:24:12,199 Node[0] Epoch[9] Batch [60-80]	Speed: 25216.87 samples/sec	accuracy=0.001202
+2020-06-20 09:24:14,847 Node[0] Epoch[9] Batch [80-100]	Speed: 25142.22 samples/sec	accuracy=0.000721
+2020-06-20 09:24:17,484 Node[0] Epoch[9] Batch [100-120]	Speed: 25244.80 samples/sec	accuracy=0.000721
+2020-06-20 09:24:20,103 Node[0] Epoch[9] Batch [120-140]	Speed: 25414.98 samples/sec	accuracy=0.001442
+2020-06-20 09:24:22,760 Node[0] Epoch[9] Batch [140-160]	Speed: 25050.93 samples/sec	accuracy=0.000721
+2020-06-20 09:24:25,386 Node[0] Epoch[9] Batch [160-180]	Speed: 25348.29 samples/sec	accuracy=0.001202
+2020-06-20 09:24:28,002 Node[0] Epoch[9] Batch [180-200]	Speed: 25448.96 samples/sec	accuracy=0.000721
+2020-06-20 09:24:30,638 Node[0] Epoch[9] Batch [200-220]	Speed: 25247.94 samples/sec	accuracy=0.000721
+2020-06-20 09:24:33,273 Node[0] Epoch[9] Batch [220-240]	Speed: 25268.36 samples/sec	accuracy=0.000721
+2020-06-20 09:24:35,905 Node[0] Epoch[9] Batch [240-260]	Speed: 25289.96 samples/sec	accuracy=0.001202
+2020-06-20 09:24:38,547 Node[0] Epoch[9] Batch [260-280]	Speed: 25196.24 samples/sec	accuracy=0.001683
+2020-06-20 09:24:41,186 Node[0] Epoch[9] Batch [280-300]	Speed: 25221.48 samples/sec	accuracy=0.000481
+2020-06-20 09:24:43,808 Node[0] Epoch[9] Batch [300-320]	Speed: 25384.44 samples/sec	accuracy=0.000481
+2020-06-20 09:24:46,417 Node[0] Epoch[9] Batch [320-340]	Speed: 25517.74 samples/sec	accuracy=0.000481
+2020-06-20 09:24:49,053 Node[0] Epoch[9] Batch [340-360]	Speed: 25254.17 samples/sec	accuracy=0.001202
+2020-06-20 09:24:51,673 Node[0] Epoch[9] Batch [360-380]	Speed: 25402.24 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592670292191, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 10}}
+2020-06-20 09:24:52,191 Node[0] Epoch[9] Time cost=50.875
+:::MLLOG {"namespace": "", "time_ms": 1592670292191, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 11}}
+2020-06-20 09:24:54,962 Node[0] Epoch[10] Batch [0-20]	Speed: 25260.94 samples/sec	accuracy=0.001603
+2020-06-20 09:24:57,592 Node[0] Epoch[10] Batch [20-40]	Speed: 25309.60 samples/sec	accuracy=0.000721
+2020-06-20 09:25:00,208 Node[0] Epoch[10] Batch [40-60]	Speed: 25452.97 samples/sec	accuracy=0.000721
+2020-06-20 09:25:02,834 Node[0] Epoch[10] Batch [60-80]	Speed: 25348.91 samples/sec	accuracy=0.000962
+2020-06-20 09:25:05,455 Node[0] Epoch[10] Batch [80-100]	Speed: 25397.71 samples/sec	accuracy=0.000962
+2020-06-20 09:25:08,073 Node[0] Epoch[10] Batch [100-120]	Speed: 25425.10 samples/sec	accuracy=0.000721
+2020-06-20 09:25:10,703 Node[0] Epoch[10] Batch [120-140]	Speed: 25307.40 samples/sec	accuracy=0.001202
+2020-06-20 09:25:13,352 Node[0] Epoch[10] Batch [140-160]	Speed: 25128.12 samples/sec	accuracy=0.000481
+2020-06-20 09:25:15,970 Node[0] Epoch[10] Batch [160-180]	Speed: 25426.95 samples/sec	accuracy=0.000721
+2020-06-20 09:25:18,595 Node[0] Epoch[10] Batch [180-200]	Speed: 25361.88 samples/sec	accuracy=0.000240
+2020-06-20 09:25:21,207 Node[0] Epoch[10] Batch [200-220]	Speed: 25485.87 samples/sec	accuracy=0.000240
+2020-06-20 09:25:23,859 Node[0] Epoch[10] Batch [220-240]	Speed: 25097.11 samples/sec	accuracy=0.000000
+2020-06-20 09:25:26,489 Node[0] Epoch[10] Batch [240-260]	Speed: 25314.81 samples/sec	accuracy=0.000962
+2020-06-20 09:25:29,114 Node[0] Epoch[10] Batch [260-280]	Speed: 25355.56 samples/sec	accuracy=0.000240
+2020-06-20 09:25:31,751 Node[0] Epoch[10] Batch [280-300]	Speed: 25241.75 samples/sec	accuracy=0.000721
+2020-06-20 09:25:34,352 Node[0] Epoch[10] Batch [300-320]	Speed: 25591.79 samples/sec	accuracy=0.000962
+2020-06-20 09:25:36,987 Node[0] Epoch[10] Batch [320-340]	Speed: 25265.23 samples/sec	accuracy=0.000721
+2020-06-20 09:25:39,606 Node[0] Epoch[10] Batch [340-360]	Speed: 25415.55 samples/sec	accuracy=0.000962
+2020-06-20 09:25:42,243 Node[0] Epoch[10] Batch [360-380]	Speed: 25241.57 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592670342761, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 11}}
+2020-06-20 09:25:42,761 Node[0] Epoch[10] Time cost=50.570
+:::MLLOG {"namespace": "", "time_ms": 1592670342761, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 12}}
+2020-06-20 09:25:45,523 Node[0] Epoch[11] Batch [0-20]	Speed: 25342.97 samples/sec	accuracy=0.001145
+2020-06-20 09:25:48,193 Node[0] Epoch[11] Batch [20-40]	Speed: 24936.28 samples/sec	accuracy=0.000000
+2020-06-20 09:25:50,826 Node[0] Epoch[11] Batch [40-60]	Speed: 25280.16 samples/sec	accuracy=0.002163
+2020-06-20 09:25:53,479 Node[0] Epoch[11] Batch [60-80]	Speed: 25090.66 samples/sec	accuracy=0.000721
+2020-06-20 09:25:56,103 Node[0] Epoch[11] Batch [80-100]	Speed: 25369.49 samples/sec	accuracy=0.000721
+2020-06-20 09:25:58,752 Node[0] Epoch[11] Batch [100-120]	Speed: 25125.15 samples/sec	accuracy=0.000962
+2020-06-20 09:26:01,373 Node[0] Epoch[11] Batch [120-140]	Speed: 25400.94 samples/sec	accuracy=0.000721
+2020-06-20 09:26:04,013 Node[0] Epoch[11] Batch [140-160]	Speed: 25210.52 samples/sec	accuracy=0.001202
+2020-06-20 09:26:06,636 Node[0] Epoch[11] Batch [160-180]	Speed: 25377.58 samples/sec	accuracy=0.000962
+2020-06-20 09:26:09,263 Node[0] Epoch[11] Batch [180-200]	Speed: 25342.57 samples/sec	accuracy=0.000721
+2020-06-20 09:26:11,868 Node[0] Epoch[11] Batch [200-220]	Speed: 25551.94 samples/sec	accuracy=0.000962
+2020-06-20 09:26:14,524 Node[0] Epoch[11] Batch [220-240]	Speed: 25066.01 samples/sec	accuracy=0.001202
+2020-06-20 09:26:17,154 Node[0] Epoch[11] Batch [240-260]	Speed: 25312.36 samples/sec	accuracy=0.001683
+2020-06-20 09:26:19,764 Node[0] Epoch[11] Batch [260-280]	Speed: 25496.58 samples/sec	accuracy=0.001683
+2020-06-20 09:26:22,398 Node[0] Epoch[11] Batch [280-300]	Speed: 25275.85 samples/sec	accuracy=0.001923
+2020-06-20 09:26:25,025 Node[0] Epoch[11] Batch [300-320]	Speed: 25338.65 samples/sec	accuracy=0.000721
+2020-06-20 09:26:27,658 Node[0] Epoch[11] Batch [320-340]	Speed: 25278.61 samples/sec	accuracy=0.000962
+2020-06-20 09:26:30,282 Node[0] Epoch[11] Batch [340-360]	Speed: 25371.14 samples/sec	accuracy=0.000962
+2020-06-20 09:26:32,922 Node[0] Epoch[11] Batch [360-380]	Speed: 25220.35 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592670393441, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 12}}
+2020-06-20 09:26:33,442 Node[0] Epoch[11] Time cost=50.681
+:::MLLOG {"namespace": "", "time_ms": 1592670393442, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 13}}
+2020-06-20 09:26:36,217 Node[0] Epoch[12] Batch [0-20]	Speed: 25218.20 samples/sec	accuracy=0.001374
+2020-06-20 09:26:38,844 Node[0] Epoch[12] Batch [20-40]	Speed: 25341.92 samples/sec	accuracy=0.001442
+2020-06-20 09:26:41,477 Node[0] Epoch[12] Batch [40-60]	Speed: 25275.12 samples/sec	accuracy=0.000721
+2020-06-20 09:26:44,098 Node[0] Epoch[12] Batch [60-80]	Speed: 25405.83 samples/sec	accuracy=0.000962
+2020-06-20 09:26:46,741 Node[0] Epoch[12] Batch [80-100]	Speed: 25177.77 samples/sec	accuracy=0.001442
+2020-06-20 09:26:49,371 Node[0] Epoch[12] Batch [100-120]	Speed: 25312.47 samples/sec	accuracy=0.000721
+2020-06-20 09:26:52,044 Node[0] Epoch[12] Batch [120-140]	Speed: 24909.75 samples/sec	accuracy=0.001683
+2020-06-20 09:26:54,649 Node[0] Epoch[12] Batch [140-160]	Speed: 25549.72 samples/sec	accuracy=0.000721
+2020-06-20 09:26:57,291 Node[0] Epoch[12] Batch [160-180]	Speed: 25198.47 samples/sec	accuracy=0.000481
+2020-06-20 09:26:59,947 Node[0] Epoch[12] Batch [180-200]	Speed: 25059.47 samples/sec	accuracy=0.000962
+2020-06-20 09:27:02,569 Node[0] Epoch[12] Batch [200-220]	Speed: 25383.78 samples/sec	accuracy=0.001442
+2020-06-20 09:27:05,197 Node[0] Epoch[12] Batch [220-240]	Speed: 25333.09 samples/sec	accuracy=0.000000
+2020-06-20 09:27:07,824 Node[0] Epoch[12] Batch [240-260]	Speed: 25337.00 samples/sec	accuracy=0.001202
+2020-06-20 09:27:10,437 Node[0] Epoch[12] Batch [260-280]	Speed: 25477.49 samples/sec	accuracy=0.001202
+2020-06-20 09:27:13,064 Node[0] Epoch[12] Batch [280-300]	Speed: 25339.52 samples/sec	accuracy=0.001202
+2020-06-20 09:27:15,680 Node[0] Epoch[12] Batch [300-320]	Speed: 25442.34 samples/sec	accuracy=0.001202
+2020-06-20 09:27:18,307 Node[0] Epoch[12] Batch [320-340]	Speed: 25338.83 samples/sec	accuracy=0.001202
+2020-06-20 09:27:20,947 Node[0] Epoch[12] Batch [340-360]	Speed: 25219.65 samples/sec	accuracy=0.001202
+2020-06-20 09:27:23,572 Node[0] Epoch[12] Batch [360-380]	Speed: 25355.50 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592670444085, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 13}}
+2020-06-20 09:27:24,085 Node[0] Epoch[12] Time cost=50.643
+:::MLLOG {"namespace": "", "time_ms": 1592670444085, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 13}}
+2020-06-20 09:27:25,669 Node[0] Epoch[12] Validation-accuracy=0.560000
+2020-06-20 09:27:25,669 Node[0] Epoch[12] Validation-correct-count=1750.000000
+2020-06-20 09:27:25,669 Node[0] Epoch[12] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592670445691, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 13}}
+:::MLLOG {"namespace": "", "time_ms": 1592670445691, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.56134, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 13}}
+:::MLLOG {"namespace": "", "time_ms": 1592670445691, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 10}}
+:::MLLOG {"namespace": "", "time_ms": 1592670445691, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 14, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592670445692, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 14}}
+2020-06-20 09:27:28,666 Node[0] Epoch[13] Batch [0-20]	Speed: 22721.82 samples/sec	accuracy=0.000458
+2020-06-20 09:27:31,286 Node[0] Epoch[13] Batch [20-40]	Speed: 25414.09 samples/sec	accuracy=0.000962
+2020-06-20 09:27:33,913 Node[0] Epoch[13] Batch [40-60]	Speed: 25337.90 samples/sec	accuracy=0.001442
+2020-06-20 09:27:36,532 Node[0] Epoch[13] Batch [60-80]	Speed: 25411.73 samples/sec	accuracy=0.001202
+2020-06-20 09:27:39,164 Node[0] Epoch[13] Batch [80-100]	Speed: 25292.13 samples/sec	accuracy=0.001442
+2020-06-20 09:27:41,800 Node[0] Epoch[13] Batch [100-120]	Speed: 25256.21 samples/sec	accuracy=0.000721
+2020-06-20 09:27:44,443 Node[0] Epoch[13] Batch [120-140]	Speed: 25188.76 samples/sec	accuracy=0.001442
+2020-06-20 09:27:47,079 Node[0] Epoch[13] Batch [140-160]	Speed: 25248.72 samples/sec	accuracy=0.000481
+2020-06-20 09:27:49,706 Node[0] Epoch[13] Batch [160-180]	Speed: 25336.00 samples/sec	accuracy=0.000240
+2020-06-20 09:27:52,346 Node[0] Epoch[13] Batch [180-200]	Speed: 25222.23 samples/sec	accuracy=0.000962
+2020-06-20 09:27:54,990 Node[0] Epoch[13] Batch [200-220]	Speed: 25175.89 samples/sec	accuracy=0.001202
+2020-06-20 09:27:57,628 Node[0] Epoch[13] Batch [220-240]	Speed: 25230.02 samples/sec	accuracy=0.001202
+2020-06-20 09:28:00,256 Node[0] Epoch[13] Batch [240-260]	Speed: 25328.69 samples/sec	accuracy=0.001202
+2020-06-20 09:28:02,877 Node[0] Epoch[13] Batch [260-280]	Speed: 25397.50 samples/sec	accuracy=0.000240
+2020-06-20 09:28:05,512 Node[0] Epoch[13] Batch [280-300]	Speed: 25259.89 samples/sec	accuracy=0.000481
+2020-06-20 09:28:08,156 Node[0] Epoch[13] Batch [300-320]	Speed: 25177.78 samples/sec	accuracy=0.000721
+2020-06-20 09:28:10,781 Node[0] Epoch[13] Batch [320-340]	Speed: 25363.93 samples/sec	accuracy=0.001683
+2020-06-20 09:28:13,415 Node[0] Epoch[13] Batch [340-360]	Speed: 25266.48 samples/sec	accuracy=0.001442
+2020-06-20 09:28:16,053 Node[0] Epoch[13] Batch [360-380]	Speed: 25236.53 samples/sec	accuracy=0.001202
+:::MLLOG {"namespace": "", "time_ms": 1592670496576, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 14}}
+2020-06-20 09:28:16,576 Node[0] Epoch[13] Time cost=50.884
+:::MLLOG {"namespace": "", "time_ms": 1592670496576, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 15}}
+2020-06-20 09:28:19,367 Node[0] Epoch[14] Batch [0-20]	Speed: 25058.94 samples/sec	accuracy=0.000229
+2020-06-20 09:28:21,974 Node[0] Epoch[14] Batch [20-40]	Speed: 25529.71 samples/sec	accuracy=0.000962
+2020-06-20 09:28:24,600 Node[0] Epoch[14] Batch [40-60]	Speed: 25348.01 samples/sec	accuracy=0.000240
+2020-06-20 09:28:27,234 Node[0] Epoch[14] Batch [60-80]	Speed: 25277.46 samples/sec	accuracy=0.001683
+2020-06-20 09:28:29,869 Node[0] Epoch[14] Batch [80-100]	Speed: 25255.28 samples/sec	accuracy=0.000962
+2020-06-20 09:28:32,514 Node[0] Epoch[14] Batch [100-120]	Speed: 25173.54 samples/sec	accuracy=0.000481
+2020-06-20 09:28:35,143 Node[0] Epoch[14] Batch [120-140]	Speed: 25318.53 samples/sec	accuracy=0.000721
+2020-06-20 09:28:37,773 Node[0] Epoch[14] Batch [140-160]	Speed: 25309.07 samples/sec	accuracy=0.001442
+2020-06-20 09:28:40,419 Node[0] Epoch[14] Batch [160-180]	Speed: 25156.69 samples/sec	accuracy=0.001442
+2020-06-20 09:28:43,051 Node[0] Epoch[14] Batch [180-200]	Speed: 25289.67 samples/sec	accuracy=0.001202
+2020-06-20 09:28:45,678 Node[0] Epoch[14] Batch [200-220]	Speed: 25336.50 samples/sec	accuracy=0.000481
+2020-06-20 09:28:48,314 Node[0] Epoch[14] Batch [220-240]	Speed: 25257.33 samples/sec	accuracy=0.000962
+2020-06-20 09:28:50,949 Node[0] Epoch[14] Batch [240-260]	Speed: 25256.56 samples/sec	accuracy=0.001923
+2020-06-20 09:28:53,573 Node[0] Epoch[14] Batch [260-280]	Speed: 25368.24 samples/sec	accuracy=0.001923
+2020-06-20 09:28:56,199 Node[0] Epoch[14] Batch [280-300]	Speed: 25349.41 samples/sec	accuracy=0.000721
+2020-06-20 09:28:58,819 Node[0] Epoch[14] Batch [300-320]	Speed: 25406.08 samples/sec	accuracy=0.000481
+2020-06-20 09:29:01,435 Node[0] Epoch[14] Batch [320-340]	Speed: 25453.62 samples/sec	accuracy=0.001442
+2020-06-20 09:29:04,081 Node[0] Epoch[14] Batch [340-360]	Speed: 25149.47 samples/sec	accuracy=0.000240
+2020-06-20 09:29:06,704 Node[0] Epoch[14] Batch [360-380]	Speed: 25382.82 samples/sec	accuracy=0.001442
+:::MLLOG {"namespace": "", "time_ms": 1592670547234, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 15}}
+2020-06-20 09:29:07,234 Node[0] Epoch[14] Time cost=50.658
+:::MLLOG {"namespace": "", "time_ms": 1592670547234, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 16}}
+2020-06-20 09:29:10,025 Node[0] Epoch[15] Batch [0-20]	Speed: 25067.53 samples/sec	accuracy=0.000458
+2020-06-20 09:29:12,654 Node[0] Epoch[15] Batch [20-40]	Speed: 25317.13 samples/sec	accuracy=0.001442
+2020-06-20 09:29:15,277 Node[0] Epoch[15] Batch [40-60]	Speed: 25378.97 samples/sec	accuracy=0.001202
+2020-06-20 09:29:17,889 Node[0] Epoch[15] Batch [60-80]	Speed: 25486.86 samples/sec	accuracy=0.000481
+2020-06-20 09:29:20,540 Node[0] Epoch[15] Batch [80-100]	Speed: 25103.91 samples/sec	accuracy=0.002163
+2020-06-20 09:29:23,168 Node[0] Epoch[15] Batch [100-120]	Speed: 25330.96 samples/sec	accuracy=0.002163
+2020-06-20 09:29:25,797 Node[0] Epoch[15] Batch [120-140]	Speed: 25323.05 samples/sec	accuracy=0.000962
+2020-06-20 09:29:28,422 Node[0] Epoch[15] Batch [140-160]	Speed: 25356.22 samples/sec	accuracy=0.002404
+2020-06-20 09:29:31,054 Node[0] Epoch[15] Batch [160-180]	Speed: 25295.58 samples/sec	accuracy=0.000962
+2020-06-20 09:29:33,685 Node[0] Epoch[15] Batch [180-200]	Speed: 25296.88 samples/sec	accuracy=0.001442
+2020-06-20 09:29:36,310 Node[0] Epoch[15] Batch [200-220]	Speed: 25361.22 samples/sec	accuracy=0.000721
+2020-06-20 09:29:38,935 Node[0] Epoch[15] Batch [220-240]	Speed: 25353.10 samples/sec	accuracy=0.001442
+2020-06-20 09:29:41,552 Node[0] Epoch[15] Batch [240-260]	Speed: 25443.34 samples/sec	accuracy=0.001442
+2020-06-20 09:29:44,199 Node[0] Epoch[15] Batch [260-280]	Speed: 25147.88 samples/sec	accuracy=0.001202
+2020-06-20 09:29:46,832 Node[0] Epoch[15] Batch [280-300]	Speed: 25277.26 samples/sec	accuracy=0.000721
+2020-06-20 09:29:49,458 Node[0] Epoch[15] Batch [300-320]	Speed: 25346.51 samples/sec	accuracy=0.000721
+2020-06-20 09:29:52,085 Node[0] Epoch[15] Batch [320-340]	Speed: 25338.57 samples/sec	accuracy=0.000962
+2020-06-20 09:29:54,714 Node[0] Epoch[15] Batch [340-360]	Speed: 25328.22 samples/sec	accuracy=0.000481
+2020-06-20 09:29:57,337 Node[0] Epoch[15] Batch [360-380]	Speed: 25376.20 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592670597870, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 16}}
+2020-06-20 09:29:57,870 Node[0] Epoch[15] Time cost=50.635
+:::MLLOG {"namespace": "", "time_ms": 1592670597870, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 17}}
+2020-06-20 09:30:00,634 Node[0] Epoch[16] Batch [0-20]	Speed: 25347.75 samples/sec	accuracy=0.000916
+2020-06-20 09:30:03,255 Node[0] Epoch[16] Batch [20-40]	Speed: 25397.46 samples/sec	accuracy=0.000962
+2020-06-20 09:30:05,892 Node[0] Epoch[16] Batch [40-60]	Speed: 25244.64 samples/sec	accuracy=0.000721
+2020-06-20 09:30:08,525 Node[0] Epoch[16] Batch [60-80]	Speed: 25282.23 samples/sec	accuracy=0.001442
+2020-06-20 09:30:11,166 Node[0] Epoch[16] Batch [80-100]	Speed: 25199.66 samples/sec	accuracy=0.001683
+2020-06-20 09:30:13,782 Node[0] Epoch[16] Batch [100-120]	Speed: 25446.68 samples/sec	accuracy=0.000481
+2020-06-20 09:30:16,425 Node[0] Epoch[16] Batch [120-140]	Speed: 25189.17 samples/sec	accuracy=0.000721
+2020-06-20 09:30:19,055 Node[0] Epoch[16] Batch [140-160]	Speed: 25304.04 samples/sec	accuracy=0.000481
+2020-06-20 09:30:21,691 Node[0] Epoch[16] Batch [160-180]	Speed: 25258.36 samples/sec	accuracy=0.000962
+2020-06-20 09:30:24,326 Node[0] Epoch[16] Batch [180-200]	Speed: 25259.69 samples/sec	accuracy=0.000721
+2020-06-20 09:30:26,976 Node[0] Epoch[16] Batch [200-220]	Speed: 25116.63 samples/sec	accuracy=0.001442
+2020-06-20 09:30:29,602 Node[0] Epoch[16] Batch [220-240]	Speed: 25355.49 samples/sec	accuracy=0.000721
+2020-06-20 09:30:32,234 Node[0] Epoch[16] Batch [240-260]	Speed: 25282.36 samples/sec	accuracy=0.001202
+2020-06-20 09:30:34,859 Node[0] Epoch[16] Batch [260-280]	Speed: 25361.33 samples/sec	accuracy=0.000962
+2020-06-20 09:30:37,485 Node[0] Epoch[16] Batch [280-300]	Speed: 25352.10 samples/sec	accuracy=0.002163
+2020-06-20 09:30:40,111 Node[0] Epoch[16] Batch [300-320]	Speed: 25342.13 samples/sec	accuracy=0.001202
+2020-06-20 09:30:42,750 Node[0] Epoch[16] Batch [320-340]	Speed: 25223.85 samples/sec	accuracy=0.001202
+2020-06-20 09:30:45,392 Node[0] Epoch[16] Batch [340-360]	Speed: 25203.47 samples/sec	accuracy=0.000481
+2020-06-20 09:30:48,014 Node[0] Epoch[16] Batch [360-380]	Speed: 25378.85 samples/sec	accuracy=0.001683
+:::MLLOG {"namespace": "", "time_ms": 1592670648543, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 17}}
+2020-06-20 09:30:48,543 Node[0] Epoch[16] Time cost=50.673
+:::MLLOG {"namespace": "", "time_ms": 1592670648543, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 17}}
+2020-06-20 09:30:50,042 Node[0] Epoch[16] Validation-accuracy=0.589440
+2020-06-20 09:30:50,042 Node[0] Epoch[16] Validation-correct-count=1842.000000
+2020-06-20 09:30:50,042 Node[0] Epoch[16] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592670650166, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 17}}
+:::MLLOG {"namespace": "", "time_ms": 1592670650166, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.59228, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 17}}
+:::MLLOG {"namespace": "", "time_ms": 1592670650166, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 14}}
+:::MLLOG {"namespace": "", "time_ms": 1592670650166, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 18, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592670650167, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 18}}
+2020-06-20 09:30:53,146 Node[0] Epoch[17] Batch [0-20]	Speed: 22850.04 samples/sec	accuracy=0.000916
+2020-06-20 09:30:55,777 Node[0] Epoch[17] Batch [20-40]	Speed: 25301.57 samples/sec	accuracy=0.001683
+2020-06-20 09:30:58,405 Node[0] Epoch[17] Batch [40-60]	Speed: 25322.31 samples/sec	accuracy=0.000240
+2020-06-20 09:31:01,064 Node[0] Epoch[17] Batch [60-80]	Speed: 25037.80 samples/sec	accuracy=0.001442
+2020-06-20 09:31:03,692 Node[0] Epoch[17] Batch [80-100]	Speed: 25328.93 samples/sec	accuracy=0.000721
+2020-06-20 09:31:06,323 Node[0] Epoch[17] Batch [100-120]	Speed: 25305.32 samples/sec	accuracy=0.001202
+2020-06-20 09:31:08,940 Node[0] Epoch[17] Batch [120-140]	Speed: 25434.26 samples/sec	accuracy=0.000962
+2020-06-20 09:31:11,573 Node[0] Epoch[17] Batch [140-160]	Speed: 25282.66 samples/sec	accuracy=0.000962
+2020-06-20 09:31:14,201 Node[0] Epoch[17] Batch [160-180]	Speed: 25322.17 samples/sec	accuracy=0.000481
+2020-06-20 09:31:16,846 Node[0] Epoch[17] Batch [180-200]	Speed: 25169.04 samples/sec	accuracy=0.000481
+2020-06-20 09:31:19,467 Node[0] Epoch[17] Batch [200-220]	Speed: 25395.30 samples/sec	accuracy=0.000481
+2020-06-20 09:31:22,102 Node[0] Epoch[17] Batch [220-240]	Speed: 25264.38 samples/sec	accuracy=0.000240
+2020-06-20 09:31:24,715 Node[0] Epoch[17] Batch [240-260]	Speed: 25474.86 samples/sec	accuracy=0.001202
+2020-06-20 09:31:27,365 Node[0] Epoch[17] Batch [260-280]	Speed: 25120.85 samples/sec	accuracy=0.001202
+2020-06-20 09:31:30,002 Node[0] Epoch[17] Batch [280-300]	Speed: 25243.41 samples/sec	accuracy=0.000481
+2020-06-20 09:31:32,647 Node[0] Epoch[17] Batch [300-320]	Speed: 25165.81 samples/sec	accuracy=0.002163
+2020-06-20 09:31:35,272 Node[0] Epoch[17] Batch [320-340]	Speed: 25354.89 samples/sec	accuracy=0.000481
+2020-06-20 09:31:37,903 Node[0] Epoch[17] Batch [340-360]	Speed: 25305.39 samples/sec	accuracy=0.000721
+2020-06-20 09:31:40,520 Node[0] Epoch[17] Batch [360-380]	Speed: 25434.73 samples/sec	accuracy=0.000240
+:::MLLOG {"namespace": "", "time_ms": 1592670701039, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 18}}
+2020-06-20 09:31:41,040 Node[0] Epoch[17] Time cost=50.873
+:::MLLOG {"namespace": "", "time_ms": 1592670701040, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 19}}
+2020-06-20 09:31:43,813 Node[0] Epoch[18] Batch [0-20]	Speed: 25245.09 samples/sec	accuracy=0.000229
+2020-06-20 09:31:46,429 Node[0] Epoch[18] Batch [20-40]	Speed: 25442.64 samples/sec	accuracy=0.002163
+2020-06-20 09:31:49,060 Node[0] Epoch[18] Batch [40-60]	Speed: 25299.88 samples/sec	accuracy=0.000481
+2020-06-20 09:31:51,688 Node[0] Epoch[18] Batch [60-80]	Speed: 25331.14 samples/sec	accuracy=0.001683
+2020-06-20 09:31:54,315 Node[0] Epoch[18] Batch [80-100]	Speed: 25337.91 samples/sec	accuracy=0.001923
+2020-06-20 09:31:56,944 Node[0] Epoch[18] Batch [100-120]	Speed: 25319.99 samples/sec	accuracy=0.001202
+2020-06-20 09:31:59,582 Node[0] Epoch[18] Batch [120-140]	Speed: 25236.08 samples/sec	accuracy=0.002163
+2020-06-20 09:32:02,215 Node[0] Epoch[18] Batch [140-160]	Speed: 25284.61 samples/sec	accuracy=0.000962
+2020-06-20 09:32:04,828 Node[0] Epoch[18] Batch [160-180]	Speed: 25474.48 samples/sec	accuracy=0.001202
+2020-06-20 09:32:07,449 Node[0] Epoch[18] Batch [180-200]	Speed: 25393.64 samples/sec	accuracy=0.000481
+2020-06-20 09:32:10,083 Node[0] Epoch[18] Batch [200-220]	Speed: 25266.83 samples/sec	accuracy=0.001442
+2020-06-20 09:32:12,725 Node[0] Epoch[18] Batch [220-240]	Speed: 25203.80 samples/sec	accuracy=0.001202
+2020-06-20 09:32:15,342 Node[0] Epoch[18] Batch [240-260]	Speed: 25430.61 samples/sec	accuracy=0.000481
+2020-06-20 09:32:17,977 Node[0] Epoch[18] Batch [260-280]	Speed: 25264.53 samples/sec	accuracy=0.001683
+2020-06-20 09:32:20,610 Node[0] Epoch[18] Batch [280-300]	Speed: 25281.72 samples/sec	accuracy=0.000721
+2020-06-20 09:32:23,233 Node[0] Epoch[18] Batch [300-320]	Speed: 25411.50 samples/sec	accuracy=0.000962
+2020-06-20 09:32:25,866 Node[0] Epoch[18] Batch [320-340]	Speed: 25283.00 samples/sec	accuracy=0.000481
+2020-06-20 09:32:28,489 Node[0] Epoch[18] Batch [340-360]	Speed: 25383.03 samples/sec	accuracy=0.001683
+2020-06-20 09:32:31,113 Node[0] Epoch[18] Batch [360-380]	Speed: 25366.03 samples/sec	accuracy=0.000240
+:::MLLOG {"namespace": "", "time_ms": 1592670751636, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 19}}
+2020-06-20 09:32:31,637 Node[0] Epoch[18] Time cost=50.597
+:::MLLOG {"namespace": "", "time_ms": 1592670751637, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 20}}
+2020-06-20 09:32:34,394 Node[0] Epoch[19] Batch [0-20]	Speed: 25368.62 samples/sec	accuracy=0.000916
+2020-06-20 09:32:37,032 Node[0] Epoch[19] Batch [20-40]	Speed: 25236.42 samples/sec	accuracy=0.000962
+2020-06-20 09:32:39,676 Node[0] Epoch[19] Batch [40-60]	Speed: 25174.52 samples/sec	accuracy=0.000721
+2020-06-20 09:32:42,310 Node[0] Epoch[19] Batch [60-80]	Speed: 25275.64 samples/sec	accuracy=0.001202
+2020-06-20 09:32:44,949 Node[0] Epoch[19] Batch [80-100]	Speed: 25229.04 samples/sec	accuracy=0.000481
+2020-06-20 09:32:47,587 Node[0] Epoch[19] Batch [100-120]	Speed: 25233.41 samples/sec	accuracy=0.001202
+2020-06-20 09:32:50,205 Node[0] Epoch[19] Batch [120-140]	Speed: 25427.54 samples/sec	accuracy=0.000240
+2020-06-20 09:32:52,846 Node[0] Epoch[19] Batch [140-160]	Speed: 25197.60 samples/sec	accuracy=0.001683
+2020-06-20 09:32:55,464 Node[0] Epoch[19] Batch [160-180]	Speed: 25429.46 samples/sec	accuracy=0.000962
+2020-06-20 09:32:58,100 Node[0] Epoch[19] Batch [180-200]	Speed: 25249.51 samples/sec	accuracy=0.000000
+2020-06-20 09:33:00,762 Node[0] Epoch[19] Batch [200-220]	Speed: 25011.45 samples/sec	accuracy=0.000481
+2020-06-20 09:33:03,389 Node[0] Epoch[19] Batch [220-240]	Speed: 25333.17 samples/sec	accuracy=0.001442
+2020-06-20 09:33:06,006 Node[0] Epoch[19] Batch [240-260]	Speed: 25438.12 samples/sec	accuracy=0.000962
+2020-06-20 09:33:08,646 Node[0] Epoch[19] Batch [260-280]	Speed: 25213.01 samples/sec	accuracy=0.001202
+2020-06-20 09:33:11,266 Node[0] Epoch[19] Batch [280-300]	Speed: 25412.08 samples/sec	accuracy=0.000481
+2020-06-20 09:33:13,906 Node[0] Epoch[19] Batch [300-320]	Speed: 25216.54 samples/sec	accuracy=0.001202
+2020-06-20 09:33:16,542 Node[0] Epoch[19] Batch [320-340]	Speed: 25244.97 samples/sec	accuracy=0.000721
+2020-06-20 09:33:19,177 Node[0] Epoch[19] Batch [340-360]	Speed: 25268.86 samples/sec	accuracy=0.000962
+2020-06-20 09:33:21,799 Node[0] Epoch[19] Batch [360-380]	Speed: 25381.47 samples/sec	accuracy=0.001442
+:::MLLOG {"namespace": "", "time_ms": 1592670802324, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 20}}
+2020-06-20 09:33:22,324 Node[0] Epoch[19] Time cost=50.687
+:::MLLOG {"namespace": "", "time_ms": 1592670802324, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 21}}
+2020-06-20 09:33:25,109 Node[0] Epoch[20] Batch [0-20]	Speed: 25088.93 samples/sec	accuracy=0.000687
+2020-06-20 09:33:27,737 Node[0] Epoch[20] Batch [20-40]	Speed: 25326.40 samples/sec	accuracy=0.000240
+2020-06-20 09:33:30,363 Node[0] Epoch[20] Batch [40-60]	Speed: 25348.97 samples/sec	accuracy=0.001202
+2020-06-20 09:33:32,993 Node[0] Epoch[20] Batch [60-80]	Speed: 25314.50 samples/sec	accuracy=0.001442
+2020-06-20 09:33:35,616 Node[0] Epoch[20] Batch [80-100]	Speed: 25374.72 samples/sec	accuracy=0.000962
+2020-06-20 09:33:38,236 Node[0] Epoch[20] Batch [100-120]	Speed: 25407.10 samples/sec	accuracy=0.000962
+2020-06-20 09:33:40,853 Node[0] Epoch[20] Batch [120-140]	Speed: 25441.69 samples/sec	accuracy=0.000721
+2020-06-20 09:33:43,488 Node[0] Epoch[20] Batch [140-160]	Speed: 25255.71 samples/sec	accuracy=0.000962
+2020-06-20 09:33:46,124 Node[0] Epoch[20] Batch [160-180]	Speed: 25252.28 samples/sec	accuracy=0.000240
+2020-06-20 09:33:48,780 Node[0] Epoch[20] Batch [180-200]	Speed: 25065.68 samples/sec	accuracy=0.000721
+2020-06-20 09:33:51,413 Node[0] Epoch[20] Batch [200-220]	Speed: 25279.95 samples/sec	accuracy=0.000481
+2020-06-20 09:33:54,053 Node[0] Epoch[20] Batch [220-240]	Speed: 25216.85 samples/sec	accuracy=0.001202
+2020-06-20 09:33:56,680 Node[0] Epoch[20] Batch [240-260]	Speed: 25340.43 samples/sec	accuracy=0.000962
+2020-06-20 09:33:59,314 Node[0] Epoch[20] Batch [260-280]	Speed: 25270.84 samples/sec	accuracy=0.001202
+2020-06-20 09:34:01,947 Node[0] Epoch[20] Batch [280-300]	Speed: 25288.09 samples/sec	accuracy=0.000962
+2020-06-20 09:34:04,590 Node[0] Epoch[20] Batch [300-320]	Speed: 25183.80 samples/sec	accuracy=0.001202
+2020-06-20 09:34:07,224 Node[0] Epoch[20] Batch [320-340]	Speed: 25269.96 samples/sec	accuracy=0.001202
+2020-06-20 09:34:09,853 Node[0] Epoch[20] Batch [340-360]	Speed: 25318.06 samples/sec	accuracy=0.001923
+2020-06-20 09:34:12,466 Node[0] Epoch[20] Batch [360-380]	Speed: 25476.19 samples/sec	accuracy=0.000000
+:::MLLOG {"namespace": "", "time_ms": 1592670852993, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 21}}
+2020-06-20 09:34:12,993 Node[0] Epoch[20] Time cost=50.669
+:::MLLOG {"namespace": "", "time_ms": 1592670852993, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 21}}
+2020-06-20 09:34:14,432 Node[0] Epoch[20] Validation-accuracy=0.592320
+2020-06-20 09:34:14,432 Node[0] Epoch[20] Validation-correct-count=1851.000000
+2020-06-20 09:34:14,432 Node[0] Epoch[20] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592670854618, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1592670854618, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.59044, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 21}}
+:::MLLOG {"namespace": "", "time_ms": 1592670854618, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 18}}
+:::MLLOG {"namespace": "", "time_ms": 1592670854619, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 22, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592670854619, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 22}}
+2020-06-20 09:34:17,575 Node[0] Epoch[21] Batch [0-20]	Speed: 22857.43 samples/sec	accuracy=0.000687
+2020-06-20 09:34:20,209 Node[0] Epoch[21] Batch [20-40]	Speed: 25270.25 samples/sec	accuracy=0.001442
+2020-06-20 09:34:22,827 Node[0] Epoch[21] Batch [40-60]	Speed: 25427.28 samples/sec	accuracy=0.000721
+2020-06-20 09:34:25,470 Node[0] Epoch[21] Batch [60-80]	Speed: 25184.66 samples/sec	accuracy=0.001683
+2020-06-20 09:34:28,109 Node[0] Epoch[21] Batch [80-100]	Speed: 25228.17 samples/sec	accuracy=0.000240
+2020-06-20 09:34:30,745 Node[0] Epoch[21] Batch [100-120]	Speed: 25248.98 samples/sec	accuracy=0.000481
+2020-06-20 09:34:33,405 Node[0] Epoch[21] Batch [120-140]	Speed: 25029.17 samples/sec	accuracy=0.000962
+2020-06-20 09:34:36,058 Node[0] Epoch[21] Batch [140-160]	Speed: 25087.54 samples/sec	accuracy=0.001442
+2020-06-20 09:34:38,683 Node[0] Epoch[21] Batch [160-180]	Speed: 25355.58 samples/sec	accuracy=0.000962
+2020-06-20 09:34:41,322 Node[0] Epoch[21] Batch [180-200]	Speed: 25229.90 samples/sec	accuracy=0.000721
+2020-06-20 09:34:43,956 Node[0] Epoch[21] Batch [200-220]	Speed: 25273.64 samples/sec	accuracy=0.000240
+2020-06-20 09:34:46,580 Node[0] Epoch[21] Batch [220-240]	Speed: 25362.66 samples/sec	accuracy=0.000481
+2020-06-20 09:34:49,210 Node[0] Epoch[21] Batch [240-260]	Speed: 25310.73 samples/sec	accuracy=0.000721
+2020-06-20 09:34:51,840 Node[0] Epoch[21] Batch [260-280]	Speed: 25308.26 samples/sec	accuracy=0.001202
+2020-06-20 09:34:54,448 Node[0] Epoch[21] Batch [280-300]	Speed: 25523.60 samples/sec	accuracy=0.002885
+2020-06-20 09:34:57,092 Node[0] Epoch[21] Batch [300-320]	Speed: 25181.01 samples/sec	accuracy=0.001202
+2020-06-20 09:34:59,757 Node[0] Epoch[21] Batch [320-340]	Speed: 24978.21 samples/sec	accuracy=0.000962
+2020-06-20 09:35:02,391 Node[0] Epoch[21] Batch [340-360]	Speed: 25273.76 samples/sec	accuracy=0.000721
+2020-06-20 09:35:05,019 Node[0] Epoch[21] Batch [360-380]	Speed: 25326.62 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592670905547, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 22}}
+2020-06-20 09:35:05,547 Node[0] Epoch[21] Time cost=50.928
+:::MLLOG {"namespace": "", "time_ms": 1592670905547, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 23}}
+2020-06-20 09:35:08,319 Node[0] Epoch[22] Batch [0-20]	Speed: 25271.56 samples/sec	accuracy=0.000000
+2020-06-20 09:35:10,955 Node[0] Epoch[22] Batch [20-40]	Speed: 25252.19 samples/sec	accuracy=0.000240
+2020-06-20 09:35:13,611 Node[0] Epoch[22] Batch [40-60]	Speed: 25060.95 samples/sec	accuracy=0.000962
+2020-06-20 09:35:16,234 Node[0] Epoch[22] Batch [60-80]	Speed: 25379.60 samples/sec	accuracy=0.000721
+2020-06-20 09:35:18,863 Node[0] Epoch[22] Batch [80-100]	Speed: 25321.18 samples/sec	accuracy=0.000721
+2020-06-20 09:35:21,504 Node[0] Epoch[22] Batch [100-120]	Speed: 25203.15 samples/sec	accuracy=0.000962
+2020-06-20 09:35:24,147 Node[0] Epoch[22] Batch [120-140]	Speed: 25191.90 samples/sec	accuracy=0.001202
+2020-06-20 09:35:26,779 Node[0] Epoch[22] Batch [140-160]	Speed: 25289.66 samples/sec	accuracy=0.001202
+2020-06-20 09:35:29,417 Node[0] Epoch[22] Batch [160-180]	Speed: 25230.02 samples/sec	accuracy=0.000962
+2020-06-20 09:35:32,027 Node[0] Epoch[22] Batch [180-200]	Speed: 25510.79 samples/sec	accuracy=0.000721
+2020-06-20 09:35:34,636 Node[0] Epoch[22] Batch [200-220]	Speed: 25507.70 samples/sec	accuracy=0.001442
+2020-06-20 09:35:37,254 Node[0] Epoch[22] Batch [220-240]	Speed: 25432.24 samples/sec	accuracy=0.001442
+2020-06-20 09:35:39,886 Node[0] Epoch[22] Batch [240-260]	Speed: 25290.82 samples/sec	accuracy=0.000481
+2020-06-20 09:35:42,521 Node[0] Epoch[22] Batch [260-280]	Speed: 25258.07 samples/sec	accuracy=0.000721
+2020-06-20 09:35:45,148 Node[0] Epoch[22] Batch [280-300]	Speed: 25342.73 samples/sec	accuracy=0.000721
+2020-06-20 09:35:47,787 Node[0] Epoch[22] Batch [300-320]	Speed: 25222.79 samples/sec	accuracy=0.000481
+2020-06-20 09:35:50,406 Node[0] Epoch[22] Batch [320-340]	Speed: 25413.77 samples/sec	accuracy=0.000721
+2020-06-20 09:35:53,038 Node[0] Epoch[22] Batch [340-360]	Speed: 25289.59 samples/sec	accuracy=0.000000
+2020-06-20 09:35:55,676 Node[0] Epoch[22] Batch [360-380]	Speed: 25239.94 samples/sec	accuracy=0.001442
+:::MLLOG {"namespace": "", "time_ms": 1592670956196, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 23}}
+2020-06-20 09:35:56,196 Node[0] Epoch[22] Time cost=50.649
+:::MLLOG {"namespace": "", "time_ms": 1592670956196, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 24}}
+2020-06-20 09:35:58,960 Node[0] Epoch[23] Batch [0-20]	Speed: 25314.26 samples/sec	accuracy=0.001145
+2020-06-20 09:36:01,581 Node[0] Epoch[23] Batch [20-40]	Speed: 25391.39 samples/sec	accuracy=0.000721
+2020-06-20 09:36:04,216 Node[0] Epoch[23] Batch [40-60]	Speed: 25269.57 samples/sec	accuracy=0.000721
+2020-06-20 09:36:06,858 Node[0] Epoch[23] Batch [60-80]	Speed: 25188.99 samples/sec	accuracy=0.000721
+2020-06-20 09:36:09,486 Node[0] Epoch[23] Batch [80-100]	Speed: 25333.60 samples/sec	accuracy=0.000721
+2020-06-20 09:36:12,110 Node[0] Epoch[23] Batch [100-120]	Speed: 25372.01 samples/sec	accuracy=0.000721
+2020-06-20 09:36:14,754 Node[0] Epoch[23] Batch [120-140]	Speed: 25177.12 samples/sec	accuracy=0.001683
+2020-06-20 09:36:17,390 Node[0] Epoch[23] Batch [140-160]	Speed: 25254.92 samples/sec	accuracy=0.000240
+2020-06-20 09:36:20,011 Node[0] Epoch[23] Batch [160-180]	Speed: 25392.47 samples/sec	accuracy=0.000962
+2020-06-20 09:36:22,652 Node[0] Epoch[23] Batch [180-200]	Speed: 25205.81 samples/sec	accuracy=0.000481
+2020-06-20 09:36:25,293 Node[0] Epoch[23] Batch [200-220]	Speed: 25202.90 samples/sec	accuracy=0.000240
+2020-06-20 09:36:27,917 Node[0] Epoch[23] Batch [220-240]	Speed: 25367.86 samples/sec	accuracy=0.000721
+2020-06-20 09:36:30,557 Node[0] Epoch[23] Batch [240-260]	Speed: 25214.40 samples/sec	accuracy=0.000481
+2020-06-20 09:36:33,219 Node[0] Epoch[23] Batch [260-280]	Speed: 25006.79 samples/sec	accuracy=0.000721
+2020-06-20 09:36:35,842 Node[0] Epoch[23] Batch [280-300]	Speed: 25383.08 samples/sec	accuracy=0.000721
+2020-06-20 09:36:38,492 Node[0] Epoch[23] Batch [300-320]	Speed: 25114.81 samples/sec	accuracy=0.001442
+2020-06-20 09:36:41,111 Node[0] Epoch[23] Batch [320-340]	Speed: 25422.75 samples/sec	accuracy=0.001202
+2020-06-20 09:36:43,762 Node[0] Epoch[23] Batch [340-360]	Speed: 25107.30 samples/sec	accuracy=0.001202
+2020-06-20 09:36:46,386 Node[0] Epoch[23] Batch [360-380]	Speed: 25363.51 samples/sec	accuracy=0.001202
+:::MLLOG {"namespace": "", "time_ms": 1592671006915, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 24}}
+2020-06-20 09:36:46,915 Node[0] Epoch[23] Time cost=50.718
+:::MLLOG {"namespace": "", "time_ms": 1592671006915, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 25}}
+2020-06-20 09:36:49,679 Node[0] Epoch[24] Batch [0-20]	Speed: 25343.78 samples/sec	accuracy=0.000916
+2020-06-20 09:36:52,313 Node[0] Epoch[24] Batch [20-40]	Speed: 25267.36 samples/sec	accuracy=0.000721
+2020-06-20 09:36:54,955 Node[0] Epoch[24] Batch [40-60]	Speed: 25198.15 samples/sec	accuracy=0.000721
+2020-06-20 09:36:57,578 Node[0] Epoch[24] Batch [60-80]	Speed: 25375.05 samples/sec	accuracy=0.000721
+2020-06-20 09:37:00,218 Node[0] Epoch[24] Batch [80-100]	Speed: 25214.80 samples/sec	accuracy=0.001202
+2020-06-20 09:37:02,845 Node[0] Epoch[24] Batch [100-120]	Speed: 25335.34 samples/sec	accuracy=0.000481
+2020-06-20 09:37:05,475 Node[0] Epoch[24] Batch [120-140]	Speed: 25309.20 samples/sec	accuracy=0.000721
+2020-06-20 09:37:08,104 Node[0] Epoch[24] Batch [140-160]	Speed: 25325.00 samples/sec	accuracy=0.001202
+2020-06-20 09:37:10,720 Node[0] Epoch[24] Batch [160-180]	Speed: 25447.55 samples/sec	accuracy=0.001442
+2020-06-20 09:37:13,369 Node[0] Epoch[24] Batch [180-200]	Speed: 25127.93 samples/sec	accuracy=0.000721
+2020-06-20 09:37:15,977 Node[0] Epoch[24] Batch [200-220]	Speed: 25523.99 samples/sec	accuracy=0.001442
+2020-06-20 09:37:18,608 Node[0] Epoch[24] Batch [220-240]	Speed: 25297.74 samples/sec	accuracy=0.000721
+2020-06-20 09:37:21,241 Node[0] Epoch[24] Batch [240-260]	Speed: 25283.27 samples/sec	accuracy=0.001683
+2020-06-20 09:37:23,872 Node[0] Epoch[24] Batch [260-280]	Speed: 25300.12 samples/sec	accuracy=0.000962
+2020-06-20 09:37:26,498 Node[0] Epoch[24] Batch [280-300]	Speed: 25344.75 samples/sec	accuracy=0.000962
+2020-06-20 09:37:29,129 Node[0] Epoch[24] Batch [300-320]	Speed: 25304.10 samples/sec	accuracy=0.000721
+2020-06-20 09:37:31,759 Node[0] Epoch[24] Batch [320-340]	Speed: 25314.97 samples/sec	accuracy=0.000240
+2020-06-20 09:37:34,388 Node[0] Epoch[24] Batch [340-360]	Speed: 25311.21 samples/sec	accuracy=0.000962
+2020-06-20 09:37:37,021 Node[0] Epoch[24] Batch [360-380]	Speed: 25285.13 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592671057541, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 25}}
+2020-06-20 09:37:37,541 Node[0] Epoch[24] Time cost=50.626
+:::MLLOG {"namespace": "", "time_ms": 1592671057541, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 25}}
+2020-06-20 09:37:39,102 Node[0] Epoch[24] Validation-accuracy=0.666240
+2020-06-20 09:37:39,102 Node[0] Epoch[24] Validation-correct-count=2082.000000
+2020-06-20 09:37:39,102 Node[0] Epoch[24] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592671059143, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1592671059144, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.65538, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 25}}
+:::MLLOG {"namespace": "", "time_ms": 1592671059144, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 22}}
+:::MLLOG {"namespace": "", "time_ms": 1592671059144, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 26, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592671059144, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 26}}
+2020-06-20 09:37:42,086 Node[0] Epoch[25] Batch [0-20]	Speed: 23119.41 samples/sec	accuracy=0.002060
+2020-06-20 09:37:44,717 Node[0] Epoch[25] Batch [20-40]	Speed: 25299.33 samples/sec	accuracy=0.000962
+2020-06-20 09:37:47,331 Node[0] Epoch[25] Batch [40-60]	Speed: 25466.68 samples/sec	accuracy=0.000721
+2020-06-20 09:37:49,982 Node[0] Epoch[25] Batch [60-80]	Speed: 25109.48 samples/sec	accuracy=0.001683
+2020-06-20 09:37:52,615 Node[0] Epoch[25] Batch [80-100]	Speed: 25275.52 samples/sec	accuracy=0.000962
+2020-06-20 09:37:55,250 Node[0] Epoch[25] Batch [100-120]	Speed: 25267.26 samples/sec	accuracy=0.000721
+2020-06-20 09:37:57,881 Node[0] Epoch[25] Batch [120-140]	Speed: 25301.63 samples/sec	accuracy=0.000721
+2020-06-20 09:38:00,513 Node[0] Epoch[25] Batch [140-160]	Speed: 25284.77 samples/sec	accuracy=0.000962
+2020-06-20 09:38:03,121 Node[0] Epoch[25] Batch [160-180]	Speed: 25527.88 samples/sec	accuracy=0.000240
+2020-06-20 09:38:05,737 Node[0] Epoch[25] Batch [180-200]	Speed: 25442.75 samples/sec	accuracy=0.000481
+2020-06-20 09:38:08,391 Node[0] Epoch[25] Batch [200-220]	Speed: 25080.79 samples/sec	accuracy=0.000481
+2020-06-20 09:38:11,021 Node[0] Epoch[25] Batch [220-240]	Speed: 25317.44 samples/sec	accuracy=0.000240
+2020-06-20 09:38:13,662 Node[0] Epoch[25] Batch [240-260]	Speed: 25200.78 samples/sec	accuracy=0.001202
+2020-06-20 09:38:16,284 Node[0] Epoch[25] Batch [260-280]	Speed: 25385.76 samples/sec	accuracy=0.001442
+2020-06-20 09:38:18,924 Node[0] Epoch[25] Batch [280-300]	Speed: 25215.87 samples/sec	accuracy=0.001202
+2020-06-20 09:38:21,559 Node[0] Epoch[25] Batch [300-320]	Speed: 25264.56 samples/sec	accuracy=0.000721
+2020-06-20 09:38:24,181 Node[0] Epoch[25] Batch [320-340]	Speed: 25386.29 samples/sec	accuracy=0.000721
+2020-06-20 09:38:26,816 Node[0] Epoch[25] Batch [340-360]	Speed: 25260.04 samples/sec	accuracy=0.000962
+2020-06-20 09:38:29,467 Node[0] Epoch[25] Batch [360-380]	Speed: 25110.79 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592671109863, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 26}}
+2020-06-20 09:38:29,864 Node[0] Epoch[25] Time cost=50.719
+:::MLLOG {"namespace": "", "time_ms": 1592671109864, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 27}}
+2020-06-20 09:38:32,630 Node[0] Epoch[26] Batch [0-20]	Speed: 25289.05 samples/sec	accuracy=0.001603
+2020-06-20 09:38:35,264 Node[0] Epoch[26] Batch [20-40]	Speed: 25267.68 samples/sec	accuracy=0.001683
+2020-06-20 09:38:37,889 Node[0] Epoch[26] Batch [40-60]	Speed: 25354.75 samples/sec	accuracy=0.000962
+2020-06-20 09:38:40,555 Node[0] Epoch[26] Batch [60-80]	Speed: 24967.65 samples/sec	accuracy=0.000962
+2020-06-20 09:38:43,195 Node[0] Epoch[26] Batch [80-100]	Speed: 25222.40 samples/sec	accuracy=0.000962
+2020-06-20 09:38:45,834 Node[0] Epoch[26] Batch [100-120]	Speed: 25221.33 samples/sec	accuracy=0.000240
+2020-06-20 09:38:48,455 Node[0] Epoch[26] Batch [120-140]	Speed: 25393.11 samples/sec	accuracy=0.001923
+2020-06-20 09:38:51,097 Node[0] Epoch[26] Batch [140-160]	Speed: 25199.67 samples/sec	accuracy=0.000962
+2020-06-20 09:38:53,749 Node[0] Epoch[26] Batch [160-180]	Speed: 25096.81 samples/sec	accuracy=0.001442
+2020-06-20 09:38:56,382 Node[0] Epoch[26] Batch [180-200]	Speed: 25286.52 samples/sec	accuracy=0.000962
+2020-06-20 09:38:59,022 Node[0] Epoch[26] Batch [200-220]	Speed: 25216.63 samples/sec	accuracy=0.000000
+2020-06-20 09:39:01,666 Node[0] Epoch[26] Batch [220-240]	Speed: 25171.72 samples/sec	accuracy=0.001202
+2020-06-20 09:39:04,319 Node[0] Epoch[26] Batch [240-260]	Speed: 25091.75 samples/sec	accuracy=0.000962
+2020-06-20 09:39:06,945 Node[0] Epoch[26] Batch [260-280]	Speed: 25350.16 samples/sec	accuracy=0.001202
+2020-06-20 09:39:09,588 Node[0] Epoch[26] Batch [280-300]	Speed: 25185.67 samples/sec	accuracy=0.000481
+2020-06-20 09:39:12,220 Node[0] Epoch[26] Batch [300-320]	Speed: 25291.06 samples/sec	accuracy=0.000962
+2020-06-20 09:39:14,859 Node[0] Epoch[26] Batch [320-340]	Speed: 25219.67 samples/sec	accuracy=0.000240
+2020-06-20 09:39:17,511 Node[0] Epoch[26] Batch [340-360]	Speed: 25099.57 samples/sec	accuracy=0.000481
+2020-06-20 09:39:20,135 Node[0] Epoch[26] Batch [360-380]	Speed: 25368.25 samples/sec	accuracy=0.001442
+:::MLLOG {"namespace": "", "time_ms": 1592671160661, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 27}}
+2020-06-20 09:39:20,661 Node[0] Epoch[26] Time cost=50.798
+:::MLLOG {"namespace": "", "time_ms": 1592671160661, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 28}}
+2020-06-20 09:39:23,464 Node[0] Epoch[27] Batch [0-20]	Speed: 24909.35 samples/sec	accuracy=0.000687
+2020-06-20 09:39:26,089 Node[0] Epoch[27] Batch [20-40]	Speed: 25359.12 samples/sec	accuracy=0.000721
+2020-06-20 09:39:28,734 Node[0] Epoch[27] Batch [40-60]	Speed: 25163.78 samples/sec	accuracy=0.000481
+2020-06-20 09:39:31,364 Node[0] Epoch[27] Batch [60-80]	Speed: 25310.91 samples/sec	accuracy=0.001202
+2020-06-20 09:39:34,019 Node[0] Epoch[27] Batch [80-100]	Speed: 25075.98 samples/sec	accuracy=0.000721
+2020-06-20 09:39:36,643 Node[0] Epoch[27] Batch [100-120]	Speed: 25359.94 samples/sec	accuracy=0.000721
+2020-06-20 09:39:39,257 Node[0] Epoch[27] Batch [120-140]	Speed: 25471.19 samples/sec	accuracy=0.000962
+2020-06-20 09:39:41,879 Node[0] Epoch[27] Batch [140-160]	Speed: 25380.91 samples/sec	accuracy=0.000240
+2020-06-20 09:39:44,499 Node[0] Epoch[27] Batch [160-180]	Speed: 25413.96 samples/sec	accuracy=0.001442
+2020-06-20 09:39:47,129 Node[0] Epoch[27] Batch [180-200]	Speed: 25307.10 samples/sec	accuracy=0.001202
+2020-06-20 09:39:49,753 Node[0] Epoch[27] Batch [200-220]	Speed: 25370.91 samples/sec	accuracy=0.000962
+2020-06-20 09:39:52,380 Node[0] Epoch[27] Batch [220-240]	Speed: 25337.37 samples/sec	accuracy=0.000481
+2020-06-20 09:39:55,016 Node[0] Epoch[27] Batch [240-260]	Speed: 25249.29 samples/sec	accuracy=0.001202
+2020-06-20 09:39:57,644 Node[0] Epoch[27] Batch [260-280]	Speed: 25330.60 samples/sec	accuracy=0.000962
+2020-06-20 09:40:00,260 Node[0] Epoch[27] Batch [280-300]	Speed: 25452.23 samples/sec	accuracy=0.001202
+2020-06-20 09:40:02,898 Node[0] Epoch[27] Batch [300-320]	Speed: 25229.09 samples/sec	accuracy=0.000240
+2020-06-20 09:40:05,525 Node[0] Epoch[27] Batch [320-340]	Speed: 25339.98 samples/sec	accuracy=0.001202
+2020-06-20 09:40:08,153 Node[0] Epoch[27] Batch [340-360]	Speed: 25333.60 samples/sec	accuracy=0.000721
+2020-06-20 09:40:10,779 Node[0] Epoch[27] Batch [360-380]	Speed: 25344.98 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592671211295, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 28}}
+2020-06-20 09:40:11,295 Node[0] Epoch[27] Time cost=50.633
+:::MLLOG {"namespace": "", "time_ms": 1592671211295, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 29}}
+2020-06-20 09:40:14,066 Node[0] Epoch[28] Batch [0-20]	Speed: 25224.52 samples/sec	accuracy=0.001603
+2020-06-20 09:40:16,684 Node[0] Epoch[28] Batch [20-40]	Speed: 25423.61 samples/sec	accuracy=0.000240
+2020-06-20 09:40:19,312 Node[0] Epoch[28] Batch [40-60]	Speed: 25329.63 samples/sec	accuracy=0.000962
+2020-06-20 09:40:21,959 Node[0] Epoch[28] Batch [60-80]	Speed: 25146.72 samples/sec	accuracy=0.000481
+2020-06-20 09:40:24,572 Node[0] Epoch[28] Batch [80-100]	Speed: 25475.89 samples/sec	accuracy=0.000240
+2020-06-20 09:40:27,213 Node[0] Epoch[28] Batch [100-120]	Speed: 25204.42 samples/sec	accuracy=0.001202
+2020-06-20 09:40:29,860 Node[0] Epoch[28] Batch [120-140]	Speed: 25152.74 samples/sec	accuracy=0.000962
+2020-06-20 09:40:32,488 Node[0] Epoch[28] Batch [140-160]	Speed: 25334.91 samples/sec	accuracy=0.001442
+2020-06-20 09:40:35,119 Node[0] Epoch[28] Batch [160-180]	Speed: 25300.79 samples/sec	accuracy=0.000721
+2020-06-20 09:40:37,760 Node[0] Epoch[28] Batch [180-200]	Speed: 25203.56 samples/sec	accuracy=0.001442
+2020-06-20 09:40:40,389 Node[0] Epoch[28] Batch [200-220]	Speed: 25316.53 samples/sec	accuracy=0.001683
+2020-06-20 09:40:43,027 Node[0] Epoch[28] Batch [220-240]	Speed: 25233.62 samples/sec	accuracy=0.000481
+2020-06-20 09:40:45,657 Node[0] Epoch[28] Batch [240-260]	Speed: 25307.08 samples/sec	accuracy=0.001683
+2020-06-20 09:40:48,304 Node[0] Epoch[28] Batch [260-280]	Speed: 25146.77 samples/sec	accuracy=0.000481
+2020-06-20 09:40:50,923 Node[0] Epoch[28] Batch [280-300]	Speed: 25421.78 samples/sec	accuracy=0.000481
+2020-06-20 09:40:53,544 Node[0] Epoch[28] Batch [300-320]	Speed: 25396.04 samples/sec	accuracy=0.001923
+2020-06-20 09:40:56,186 Node[0] Epoch[28] Batch [320-340]	Speed: 25198.48 samples/sec	accuracy=0.000000
+2020-06-20 09:40:58,808 Node[0] Epoch[28] Batch [340-360]	Speed: 25382.98 samples/sec	accuracy=0.000481
+2020-06-20 09:41:01,457 Node[0] Epoch[28] Batch [360-380]	Speed: 25135.11 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592671261968, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 29}}
+2020-06-20 09:41:01,968 Node[0] Epoch[28] Time cost=50.673
+:::MLLOG {"namespace": "", "time_ms": 1592671261968, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 29}}
+2020-06-20 09:41:03,604 Node[0] Epoch[28] Validation-accuracy=0.677440
+2020-06-20 09:41:03,604 Node[0] Epoch[28] Validation-correct-count=2117.000000
+2020-06-20 09:41:03,604 Node[0] Epoch[28] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592671263604, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1592671263605, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.68698, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 29}}
+:::MLLOG {"namespace": "", "time_ms": 1592671263605, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 26}}
+:::MLLOG {"namespace": "", "time_ms": 1592671263605, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 30, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592671263605, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 30}}
+2020-06-20 09:41:06,590 Node[0] Epoch[29] Batch [0-20]	Speed: 22631.95 samples/sec	accuracy=0.001603
+2020-06-20 09:41:09,234 Node[0] Epoch[29] Batch [20-40]	Speed: 25175.81 samples/sec	accuracy=0.000240
+2020-06-20 09:41:11,876 Node[0] Epoch[29] Batch [40-60]	Speed: 25194.39 samples/sec	accuracy=0.001202
+2020-06-20 09:41:14,513 Node[0] Epoch[29] Batch [60-80]	Speed: 25245.71 samples/sec	accuracy=0.001442
+2020-06-20 09:41:17,131 Node[0] Epoch[29] Batch [80-100]	Speed: 25422.14 samples/sec	accuracy=0.000721
+2020-06-20 09:41:19,780 Node[0] Epoch[29] Batch [100-120]	Speed: 25127.08 samples/sec	accuracy=0.001442
+2020-06-20 09:41:22,408 Node[0] Epoch[29] Batch [120-140]	Speed: 25329.10 samples/sec	accuracy=0.000962
+2020-06-20 09:41:25,029 Node[0] Epoch[29] Batch [140-160]	Speed: 25394.40 samples/sec	accuracy=0.001442
+2020-06-20 09:41:27,660 Node[0] Epoch[29] Batch [160-180]	Speed: 25305.00 samples/sec	accuracy=0.000721
+2020-06-20 09:41:30,295 Node[0] Epoch[29] Batch [180-200]	Speed: 25267.29 samples/sec	accuracy=0.001202
+2020-06-20 09:41:32,947 Node[0] Epoch[29] Batch [200-220]	Speed: 25095.48 samples/sec	accuracy=0.000240
+2020-06-20 09:41:35,596 Node[0] Epoch[29] Batch [220-240]	Speed: 25128.82 samples/sec	accuracy=0.000481
+2020-06-20 09:41:38,221 Node[0] Epoch[29] Batch [240-260]	Speed: 25362.27 samples/sec	accuracy=0.000481
+2020-06-20 09:41:40,860 Node[0] Epoch[29] Batch [260-280]	Speed: 25220.67 samples/sec	accuracy=0.000481
+2020-06-20 09:41:43,493 Node[0] Epoch[29] Batch [280-300]	Speed: 25280.14 samples/sec	accuracy=0.001202
+2020-06-20 09:41:46,141 Node[0] Epoch[29] Batch [300-320]	Speed: 25145.08 samples/sec	accuracy=0.000962
+2020-06-20 09:41:48,787 Node[0] Epoch[29] Batch [320-340]	Speed: 25156.70 samples/sec	accuracy=0.001442
+2020-06-20 09:41:51,418 Node[0] Epoch[29] Batch [340-360]	Speed: 25301.13 samples/sec	accuracy=0.000000
+2020-06-20 09:41:54,065 Node[0] Epoch[29] Batch [360-380]	Speed: 25147.98 samples/sec	accuracy=0.001683
+:::MLLOG {"namespace": "", "time_ms": 1592671314591, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 30}}
+2020-06-20 09:41:54,591 Node[0] Epoch[29] Time cost=50.986
+:::MLLOG {"namespace": "", "time_ms": 1592671314592, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 31}}
+2020-06-20 09:41:57,376 Node[0] Epoch[30] Batch [0-20]	Speed: 25116.69 samples/sec	accuracy=0.000458
+2020-06-20 09:42:00,005 Node[0] Epoch[30] Batch [20-40]	Speed: 25317.88 samples/sec	accuracy=0.000481
+2020-06-20 09:42:02,627 Node[0] Epoch[30] Batch [40-60]	Speed: 25387.12 samples/sec	accuracy=0.000721
+2020-06-20 09:42:05,256 Node[0] Epoch[30] Batch [60-80]	Speed: 25327.55 samples/sec	accuracy=0.000962
+2020-06-20 09:42:07,898 Node[0] Epoch[30] Batch [80-100]	Speed: 25193.47 samples/sec	accuracy=0.001202
+2020-06-20 09:42:10,526 Node[0] Epoch[30] Batch [100-120]	Speed: 25326.11 samples/sec	accuracy=0.001442
+2020-06-20 09:42:13,155 Node[0] Epoch[30] Batch [120-140]	Speed: 25317.55 samples/sec	accuracy=0.001923
+2020-06-20 09:42:15,783 Node[0] Epoch[30] Batch [140-160]	Speed: 25330.75 samples/sec	accuracy=0.000000
+2020-06-20 09:42:18,414 Node[0] Epoch[30] Batch [160-180]	Speed: 25299.96 samples/sec	accuracy=0.000240
+2020-06-20 09:42:21,050 Node[0] Epoch[30] Batch [180-200]	Speed: 25255.22 samples/sec	accuracy=0.000721
+2020-06-20 09:42:23,677 Node[0] Epoch[30] Batch [200-220]	Speed: 25342.38 samples/sec	accuracy=0.000721
+2020-06-20 09:42:26,331 Node[0] Epoch[30] Batch [220-240]	Speed: 25078.07 samples/sec	accuracy=0.001202
+2020-06-20 09:42:28,964 Node[0] Epoch[30] Batch [240-260]	Speed: 25284.94 samples/sec	accuracy=0.001202
+2020-06-20 09:42:31,585 Node[0] Epoch[30] Batch [260-280]	Speed: 25397.84 samples/sec	accuracy=0.000240
+2020-06-20 09:42:34,224 Node[0] Epoch[30] Batch [280-300]	Speed: 25222.49 samples/sec	accuracy=0.002163
+2020-06-20 09:42:36,857 Node[0] Epoch[30] Batch [300-320]	Speed: 25279.12 samples/sec	accuracy=0.000481
+2020-06-20 09:42:39,473 Node[0] Epoch[30] Batch [320-340]	Speed: 25445.68 samples/sec	accuracy=0.000481
+2020-06-20 09:42:42,100 Node[0] Epoch[30] Batch [340-360]	Speed: 25337.06 samples/sec	accuracy=0.000962
+2020-06-20 09:42:44,721 Node[0] Epoch[30] Batch [360-380]	Speed: 25403.91 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592671365247, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 31}}
+2020-06-20 09:42:45,247 Node[0] Epoch[30] Time cost=50.655
+:::MLLOG {"namespace": "", "time_ms": 1592671365247, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 32}}
+2020-06-20 09:42:48,029 Node[0] Epoch[31] Batch [0-20]	Speed: 25135.06 samples/sec	accuracy=0.001603
+2020-06-20 09:42:50,658 Node[0] Epoch[31] Batch [20-40]	Speed: 25320.36 samples/sec	accuracy=0.000481
+2020-06-20 09:42:53,310 Node[0] Epoch[31] Batch [40-60]	Speed: 25100.80 samples/sec	accuracy=0.000481
+2020-06-20 09:42:55,948 Node[0] Epoch[31] Batch [60-80]	Speed: 25235.61 samples/sec	accuracy=0.000962
+2020-06-20 09:42:58,581 Node[0] Epoch[31] Batch [80-100]	Speed: 25289.40 samples/sec	accuracy=0.002404
+2020-06-20 09:43:01,225 Node[0] Epoch[31] Batch [100-120]	Speed: 25168.45 samples/sec	accuracy=0.000962
+2020-06-20 09:43:03,863 Node[0] Epoch[31] Batch [120-140]	Speed: 25235.03 samples/sec	accuracy=0.001442
+2020-06-20 09:43:06,503 Node[0] Epoch[31] Batch [140-160]	Speed: 25213.01 samples/sec	accuracy=0.000240
+2020-06-20 09:43:09,138 Node[0] Epoch[31] Batch [160-180]	Speed: 25262.95 samples/sec	accuracy=0.000481
+2020-06-20 09:43:11,769 Node[0] Epoch[31] Batch [180-200]	Speed: 25307.67 samples/sec	accuracy=0.001202
+2020-06-20 09:43:14,388 Node[0] Epoch[31] Batch [200-220]	Speed: 25412.06 samples/sec	accuracy=0.000721
+2020-06-20 09:43:17,023 Node[0] Epoch[31] Batch [220-240]	Speed: 25265.05 samples/sec	accuracy=0.001683
+2020-06-20 09:43:19,677 Node[0] Epoch[31] Batch [240-260]	Speed: 25078.83 samples/sec	accuracy=0.000721
+2020-06-20 09:43:22,309 Node[0] Epoch[31] Batch [260-280]	Speed: 25286.79 samples/sec	accuracy=0.000721
+2020-06-20 09:43:24,932 Node[0] Epoch[31] Batch [280-300]	Speed: 25382.95 samples/sec	accuracy=0.000721
+2020-06-20 09:43:27,559 Node[0] Epoch[31] Batch [300-320]	Speed: 25338.96 samples/sec	accuracy=0.000962
+2020-06-20 09:43:30,215 Node[0] Epoch[31] Batch [320-340]	Speed: 25061.99 samples/sec	accuracy=0.000962
+2020-06-20 09:43:32,833 Node[0] Epoch[31] Batch [340-360]	Speed: 25422.79 samples/sec	accuracy=0.000721
+2020-06-20 09:43:35,469 Node[0] Epoch[31] Batch [360-380]	Speed: 25250.56 samples/sec	accuracy=0.001202
+:::MLLOG {"namespace": "", "time_ms": 1592671415998, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 32}}
+2020-06-20 09:43:35,999 Node[0] Epoch[31] Time cost=50.751
+:::MLLOG {"namespace": "", "time_ms": 1592671415999, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 33}}
+2020-06-20 09:43:38,769 Node[0] Epoch[32] Batch [0-20]	Speed: 25244.66 samples/sec	accuracy=0.001145
+2020-06-20 09:43:41,414 Node[0] Epoch[32] Batch [20-40]	Speed: 25162.92 samples/sec	accuracy=0.000962
+2020-06-20 09:43:44,049 Node[0] Epoch[32] Batch [40-60]	Speed: 25265.36 samples/sec	accuracy=0.001923
+2020-06-20 09:43:46,677 Node[0] Epoch[32] Batch [60-80]	Speed: 25334.87 samples/sec	accuracy=0.000481
+2020-06-20 09:43:49,309 Node[0] Epoch[32] Batch [80-100]	Speed: 25286.74 samples/sec	accuracy=0.001442
+2020-06-20 09:43:51,943 Node[0] Epoch[32] Batch [100-120]	Speed: 25267.99 samples/sec	accuracy=0.000721
+2020-06-20 09:43:54,596 Node[0] Epoch[32] Batch [120-140]	Speed: 25097.43 samples/sec	accuracy=0.001442
+2020-06-20 09:43:57,218 Node[0] Epoch[32] Batch [140-160]	Speed: 25381.45 samples/sec	accuracy=0.000962
+2020-06-20 09:43:59,848 Node[0] Epoch[32] Batch [160-180]	Speed: 25315.83 samples/sec	accuracy=0.000721
+2020-06-20 09:44:02,481 Node[0] Epoch[32] Batch [180-200]	Speed: 25274.76 samples/sec	accuracy=0.001442
+2020-06-20 09:44:05,102 Node[0] Epoch[32] Batch [200-220]	Speed: 25398.31 samples/sec	accuracy=0.002163
+2020-06-20 09:44:07,732 Node[0] Epoch[32] Batch [220-240]	Speed: 25308.40 samples/sec	accuracy=0.001202
+2020-06-20 09:44:10,384 Node[0] Epoch[32] Batch [240-260]	Speed: 25104.38 samples/sec	accuracy=0.000481
+2020-06-20 09:44:13,016 Node[0] Epoch[32] Batch [260-280]	Speed: 25290.69 samples/sec	accuracy=0.000721
+2020-06-20 09:44:15,627 Node[0] Epoch[32] Batch [280-300]	Speed: 25500.02 samples/sec	accuracy=0.000721
+2020-06-20 09:44:18,254 Node[0] Epoch[32] Batch [300-320]	Speed: 25334.62 samples/sec	accuracy=0.000962
+2020-06-20 09:44:20,886 Node[0] Epoch[32] Batch [320-340]	Speed: 25295.12 samples/sec	accuracy=0.000721
+2020-06-20 09:44:23,516 Node[0] Epoch[32] Batch [340-360]	Speed: 25312.87 samples/sec	accuracy=0.000962
+2020-06-20 09:44:26,159 Node[0] Epoch[32] Batch [360-380]	Speed: 25183.23 samples/sec	accuracy=0.000240
+:::MLLOG {"namespace": "", "time_ms": 1592671466676, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 33}}
+2020-06-20 09:44:26,677 Node[0] Epoch[32] Time cost=50.678
+:::MLLOG {"namespace": "", "time_ms": 1592671466677, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 33}}
+2020-06-20 09:44:28,164 Node[0] Epoch[32] Validation-accuracy=0.708800
+2020-06-20 09:44:28,164 Node[0] Epoch[32] Validation-correct-count=2215.000000
+2020-06-20 09:44:28,164 Node[0] Epoch[32] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592671468302, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1592671468302, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.71702, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 33}}
+:::MLLOG {"namespace": "", "time_ms": 1592671468302, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 30}}
+:::MLLOG {"namespace": "", "time_ms": 1592671468302, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 34, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592671468303, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 34}}
+2020-06-20 09:44:31,289 Node[0] Epoch[33] Batch [0-20]	Speed: 22708.62 samples/sec	accuracy=0.000916
+2020-06-20 09:44:33,923 Node[0] Epoch[33] Batch [20-40]	Speed: 25265.89 samples/sec	accuracy=0.000481
+2020-06-20 09:44:36,567 Node[0] Epoch[33] Batch [40-60]	Speed: 25184.06 samples/sec	accuracy=0.000240
+2020-06-20 09:44:39,197 Node[0] Epoch[33] Batch [60-80]	Speed: 25311.32 samples/sec	accuracy=0.001442
+2020-06-20 09:44:41,813 Node[0] Epoch[33] Batch [80-100]	Speed: 25445.75 samples/sec	accuracy=0.000240
+2020-06-20 09:44:44,439 Node[0] Epoch[33] Batch [100-120]	Speed: 25344.60 samples/sec	accuracy=0.000962
+2020-06-20 09:44:47,069 Node[0] Epoch[33] Batch [120-140]	Speed: 25311.85 samples/sec	accuracy=0.001683
+2020-06-20 09:44:49,691 Node[0] Epoch[33] Batch [140-160]	Speed: 25386.31 samples/sec	accuracy=0.000962
+2020-06-20 09:44:52,307 Node[0] Epoch[33] Batch [160-180]	Speed: 25450.06 samples/sec	accuracy=0.001202
+2020-06-20 09:44:54,920 Node[0] Epoch[33] Batch [180-200]	Speed: 25472.77 samples/sec	accuracy=0.000962
+2020-06-20 09:44:57,545 Node[0] Epoch[33] Batch [200-220]	Speed: 25355.46 samples/sec	accuracy=0.000962
+2020-06-20 09:45:00,159 Node[0] Epoch[33] Batch [220-240]	Speed: 25465.89 samples/sec	accuracy=0.000721
+2020-06-20 09:45:02,793 Node[0] Epoch[33] Batch [240-260]	Speed: 25273.98 samples/sec	accuracy=0.002644
+2020-06-20 09:45:05,437 Node[0] Epoch[33] Batch [260-280]	Speed: 25175.86 samples/sec	accuracy=0.000721
+2020-06-20 09:45:08,080 Node[0] Epoch[33] Batch [280-300]	Speed: 25185.09 samples/sec	accuracy=0.000481
+2020-06-20 09:45:10,704 Node[0] Epoch[33] Batch [300-320]	Speed: 25371.61 samples/sec	accuracy=0.001202
+2020-06-20 09:45:13,320 Node[0] Epoch[33] Batch [320-340]	Speed: 25444.71 samples/sec	accuracy=0.000240
+2020-06-20 09:45:15,954 Node[0] Epoch[33] Batch [340-360]	Speed: 25266.76 samples/sec	accuracy=0.000721
+2020-06-20 09:45:18,603 Node[0] Epoch[33] Batch [360-380]	Speed: 25134.62 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592671519128, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 34}}
+2020-06-20 09:45:19,128 Node[0] Epoch[33] Time cost=50.825
+:::MLLOG {"namespace": "", "time_ms": 1592671519128, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 35}}
+2020-06-20 09:45:21,893 Node[0] Epoch[34] Batch [0-20]	Speed: 25286.33 samples/sec	accuracy=0.000916
+2020-06-20 09:45:24,520 Node[0] Epoch[34] Batch [20-40]	Speed: 25332.90 samples/sec	accuracy=0.001923
+2020-06-20 09:45:27,152 Node[0] Epoch[34] Batch [40-60]	Speed: 25294.63 samples/sec	accuracy=0.000721
+2020-06-20 09:45:29,780 Node[0] Epoch[34] Batch [60-80]	Speed: 25335.28 samples/sec	accuracy=0.001202
+2020-06-20 09:45:32,399 Node[0] Epoch[34] Batch [80-100]	Speed: 25414.40 samples/sec	accuracy=0.000962
+2020-06-20 09:45:35,047 Node[0] Epoch[34] Batch [100-120]	Speed: 25135.82 samples/sec	accuracy=0.001442
+2020-06-20 09:45:37,673 Node[0] Epoch[34] Batch [120-140]	Speed: 25354.73 samples/sec	accuracy=0.000240
+2020-06-20 09:45:40,306 Node[0] Epoch[34] Batch [140-160]	Speed: 25276.57 samples/sec	accuracy=0.001202
+2020-06-20 09:45:42,945 Node[0] Epoch[34] Batch [160-180]	Speed: 25225.42 samples/sec	accuracy=0.000721
+2020-06-20 09:45:45,602 Node[0] Epoch[34] Batch [180-200]	Speed: 25055.09 samples/sec	accuracy=0.001442
+2020-06-20 09:45:48,226 Node[0] Epoch[34] Batch [200-220]	Speed: 25365.57 samples/sec	accuracy=0.000721
+2020-06-20 09:45:50,846 Node[0] Epoch[34] Batch [220-240]	Speed: 25403.86 samples/sec	accuracy=0.000721
+2020-06-20 09:45:53,479 Node[0] Epoch[34] Batch [240-260]	Speed: 25283.96 samples/sec	accuracy=0.000962
+2020-06-20 09:45:56,108 Node[0] Epoch[34] Batch [260-280]	Speed: 25322.57 samples/sec	accuracy=0.001202
+2020-06-20 09:45:58,738 Node[0] Epoch[34] Batch [280-300]	Speed: 25313.27 samples/sec	accuracy=0.000962
+2020-06-20 09:46:01,368 Node[0] Epoch[34] Batch [300-320]	Speed: 25310.50 samples/sec	accuracy=0.000481
+2020-06-20 09:46:04,004 Node[0] Epoch[34] Batch [320-340]	Speed: 25249.40 samples/sec	accuracy=0.000721
+2020-06-20 09:46:06,637 Node[0] Epoch[34] Batch [340-360]	Speed: 25281.23 samples/sec	accuracy=0.000962
+2020-06-20 09:46:09,257 Node[0] Epoch[34] Batch [360-380]	Speed: 25402.43 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592671569774, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 35}}
+2020-06-20 09:46:09,774 Node[0] Epoch[34] Time cost=50.646
+:::MLLOG {"namespace": "", "time_ms": 1592671569774, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 36}}
+2020-06-20 09:46:12,539 Node[0] Epoch[35] Batch [0-20]	Speed: 25379.65 samples/sec	accuracy=0.000000
+2020-06-20 09:46:15,173 Node[0] Epoch[35] Batch [20-40]	Speed: 25271.63 samples/sec	accuracy=0.001442
+2020-06-20 09:46:17,823 Node[0] Epoch[35] Batch [40-60]	Speed: 25123.42 samples/sec	accuracy=0.001442
+2020-06-20 09:46:20,448 Node[0] Epoch[35] Batch [60-80]	Speed: 25357.97 samples/sec	accuracy=0.000962
+2020-06-20 09:46:23,083 Node[0] Epoch[35] Batch [80-100]	Speed: 25258.85 samples/sec	accuracy=0.000481
+2020-06-20 09:46:25,701 Node[0] Epoch[35] Batch [100-120]	Speed: 25429.13 samples/sec	accuracy=0.001442
+2020-06-20 09:46:28,348 Node[0] Epoch[35] Batch [120-140]	Speed: 25142.53 samples/sec	accuracy=0.000000
+2020-06-20 09:46:30,969 Node[0] Epoch[35] Batch [140-160]	Speed: 25401.25 samples/sec	accuracy=0.000481
+2020-06-20 09:46:33,611 Node[0] Epoch[35] Batch [160-180]	Speed: 25198.46 samples/sec	accuracy=0.000721
+2020-06-20 09:46:36,244 Node[0] Epoch[35] Batch [180-200]	Speed: 25282.02 samples/sec	accuracy=0.000962
+2020-06-20 09:46:38,874 Node[0] Epoch[35] Batch [200-220]	Speed: 25307.17 samples/sec	accuracy=0.001683
+2020-06-20 09:46:41,506 Node[0] Epoch[35] Batch [220-240]	Speed: 25291.28 samples/sec	accuracy=0.001202
+2020-06-20 09:46:44,148 Node[0] Epoch[35] Batch [240-260]	Speed: 25194.34 samples/sec	accuracy=0.001202
+2020-06-20 09:46:46,774 Node[0] Epoch[35] Batch [260-280]	Speed: 25349.04 samples/sec	accuracy=0.000962
+2020-06-20 09:46:49,395 Node[0] Epoch[35] Batch [280-300]	Speed: 25394.13 samples/sec	accuracy=0.000962
+2020-06-20 09:46:52,011 Node[0] Epoch[35] Batch [300-320]	Speed: 25451.57 samples/sec	accuracy=0.002163
+2020-06-20 09:46:54,652 Node[0] Epoch[35] Batch [320-340]	Speed: 25200.27 samples/sec	accuracy=0.000721
+2020-06-20 09:46:57,289 Node[0] Epoch[35] Batch [340-360]	Speed: 25248.64 samples/sec	accuracy=0.001683
+2020-06-20 09:46:59,915 Node[0] Epoch[35] Batch [360-380]	Speed: 25343.65 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592671620439, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 36}}
+2020-06-20 09:47:00,439 Node[0] Epoch[35] Time cost=50.665
+:::MLLOG {"namespace": "", "time_ms": 1592671620440, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 37}}
+2020-06-20 09:47:03,214 Node[0] Epoch[36] Batch [0-20]	Speed: 25205.41 samples/sec	accuracy=0.000916
+2020-06-20 09:47:05,849 Node[0] Epoch[36] Batch [20-40]	Speed: 25268.87 samples/sec	accuracy=0.000721
+2020-06-20 09:47:08,480 Node[0] Epoch[36] Batch [40-60]	Speed: 25293.05 samples/sec	accuracy=0.000962
+2020-06-20 09:47:11,107 Node[0] Epoch[36] Batch [60-80]	Speed: 25339.97 samples/sec	accuracy=0.001202
+2020-06-20 09:47:13,745 Node[0] Epoch[36] Batch [80-100]	Speed: 25232.62 samples/sec	accuracy=0.000962
+2020-06-20 09:47:16,386 Node[0] Epoch[36] Batch [100-120]	Speed: 25206.52 samples/sec	accuracy=0.000721
+2020-06-20 09:47:19,009 Node[0] Epoch[36] Batch [120-140]	Speed: 25386.71 samples/sec	accuracy=0.000240
+2020-06-20 09:47:21,639 Node[0] Epoch[36] Batch [140-160]	Speed: 25303.54 samples/sec	accuracy=0.001923
+2020-06-20 09:47:24,293 Node[0] Epoch[36] Batch [160-180]	Speed: 25084.66 samples/sec	accuracy=0.001202
+2020-06-20 09:47:26,922 Node[0] Epoch[36] Batch [180-200]	Speed: 25321.60 samples/sec	accuracy=0.000481
+2020-06-20 09:47:29,564 Node[0] Epoch[36] Batch [200-220]	Speed: 25190.64 samples/sec	accuracy=0.000481
+2020-06-20 09:47:32,201 Node[0] Epoch[36] Batch [220-240]	Speed: 25246.20 samples/sec	accuracy=0.001442
+2020-06-20 09:47:34,832 Node[0] Epoch[36] Batch [240-260]	Speed: 25295.20 samples/sec	accuracy=0.000962
+2020-06-20 09:47:37,486 Node[0] Epoch[36] Batch [260-280]	Speed: 25083.68 samples/sec	accuracy=0.001923
+2020-06-20 09:47:40,130 Node[0] Epoch[36] Batch [280-300]	Speed: 25174.16 samples/sec	accuracy=0.001202
+2020-06-20 09:47:42,785 Node[0] Epoch[36] Batch [300-320]	Speed: 25075.44 samples/sec	accuracy=0.001683
+2020-06-20 09:47:45,416 Node[0] Epoch[36] Batch [320-340]	Speed: 25303.91 samples/sec	accuracy=0.000721
+2020-06-20 09:47:48,067 Node[0] Epoch[36] Batch [340-360]	Speed: 25105.45 samples/sec	accuracy=0.001202
+2020-06-20 09:47:50,721 Node[0] Epoch[36] Batch [360-380]	Speed: 25086.61 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592671671251, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 37}}
+2020-06-20 09:47:51,252 Node[0] Epoch[36] Time cost=50.812
+:::MLLOG {"namespace": "", "time_ms": 1592671671252, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 37}}
+2020-06-20 09:47:52,870 Node[0] Epoch[36] Validation-accuracy=0.744960
+2020-06-20 09:47:52,870 Node[0] Epoch[36] Validation-correct-count=2328.000000
+2020-06-20 09:47:52,870 Node[0] Epoch[36] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592671672870, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1592671672871, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.74978, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 37}}
+:::MLLOG {"namespace": "", "time_ms": 1592671672871, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 34}}
+:::MLLOG {"namespace": "", "time_ms": 1592671672871, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 1007, "first_epoch_num": 38, "epoch_count": 4}}
+:::MLLOG {"namespace": "", "time_ms": 1592671672871, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 38}}
+2020-06-20 09:47:55,829 Node[0] Epoch[37] Batch [0-20]	Speed: 22977.39 samples/sec	accuracy=0.000916
+2020-06-20 09:47:58,458 Node[0] Epoch[37] Batch [20-40]	Speed: 25323.18 samples/sec	accuracy=0.001202
+2020-06-20 09:48:01,097 Node[0] Epoch[37] Batch [40-60]	Speed: 25216.30 samples/sec	accuracy=0.001202
+2020-06-20 09:48:03,757 Node[0] Epoch[37] Batch [60-80]	Speed: 25028.24 samples/sec	accuracy=0.001442
+2020-06-20 09:48:06,394 Node[0] Epoch[37] Batch [80-100]	Speed: 25247.52 samples/sec	accuracy=0.000240
+2020-06-20 09:48:09,039 Node[0] Epoch[37] Batch [100-120]	Speed: 25159.58 samples/sec	accuracy=0.000721
+2020-06-20 09:48:11,678 Node[0] Epoch[37] Batch [120-140]	Speed: 25230.90 samples/sec	accuracy=0.001442
+2020-06-20 09:48:14,312 Node[0] Epoch[37] Batch [140-160]	Speed: 25267.48 samples/sec	accuracy=0.001202
+2020-06-20 09:48:16,965 Node[0] Epoch[37] Batch [160-180]	Speed: 25091.33 samples/sec	accuracy=0.000481
+2020-06-20 09:48:19,609 Node[0] Epoch[37] Batch [180-200]	Speed: 25179.93 samples/sec	accuracy=0.000721
+2020-06-20 09:48:22,253 Node[0] Epoch[37] Batch [200-220]	Speed: 25173.73 samples/sec	accuracy=0.001442
+2020-06-20 09:48:24,876 Node[0] Epoch[37] Batch [220-240]	Speed: 25376.66 samples/sec	accuracy=0.000962
+2020-06-20 09:48:27,505 Node[0] Epoch[37] Batch [240-260]	Speed: 25323.20 samples/sec	accuracy=0.000962
+2020-06-20 09:48:30,125 Node[0] Epoch[37] Batch [260-280]	Speed: 25409.82 samples/sec	accuracy=0.000481
+2020-06-20 09:48:32,766 Node[0] Epoch[37] Batch [280-300]	Speed: 25198.38 samples/sec	accuracy=0.001923
+2020-06-20 09:48:35,385 Node[0] Epoch[37] Batch [300-320]	Speed: 25421.80 samples/sec	accuracy=0.001202
+2020-06-20 09:48:38,021 Node[0] Epoch[37] Batch [320-340]	Speed: 25245.30 samples/sec	accuracy=0.000962
+2020-06-20 09:48:40,654 Node[0] Epoch[37] Batch [340-360]	Speed: 25282.49 samples/sec	accuracy=0.000721
+2020-06-20 09:48:43,283 Node[0] Epoch[37] Batch [360-380]	Speed: 25322.39 samples/sec	accuracy=0.001683
+:::MLLOG {"namespace": "", "time_ms": 1592671723798, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 38}}
+2020-06-20 09:48:43,798 Node[0] Epoch[37] Time cost=50.927
+:::MLLOG {"namespace": "", "time_ms": 1592671723798, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 39}}
+2020-06-20 09:48:46,568 Node[0] Epoch[38] Batch [0-20]	Speed: 25205.90 samples/sec	accuracy=0.000687
+2020-06-20 09:48:49,199 Node[0] Epoch[38] Batch [20-40]	Speed: 25301.16 samples/sec	accuracy=0.000240
+2020-06-20 09:48:51,858 Node[0] Epoch[38] Batch [40-60]	Speed: 25036.61 samples/sec	accuracy=0.000721
+2020-06-20 09:48:54,513 Node[0] Epoch[38] Batch [60-80]	Speed: 25072.25 samples/sec	accuracy=0.000481
+2020-06-20 09:48:57,126 Node[0] Epoch[38] Batch [80-100]	Speed: 25472.57 samples/sec	accuracy=0.000481
+2020-06-20 09:48:59,758 Node[0] Epoch[38] Batch [100-120]	Speed: 25285.83 samples/sec	accuracy=0.001442
+2020-06-20 09:49:02,405 Node[0] Epoch[38] Batch [120-140]	Speed: 25149.43 samples/sec	accuracy=0.001923
+2020-06-20 09:49:05,032 Node[0] Epoch[38] Batch [140-160]	Speed: 25341.37 samples/sec	accuracy=0.000721
+2020-06-20 09:49:07,661 Node[0] Epoch[38] Batch [160-180]	Speed: 25317.36 samples/sec	accuracy=0.000721
+2020-06-20 09:49:10,296 Node[0] Epoch[38] Batch [180-200]	Speed: 25267.47 samples/sec	accuracy=0.001202
+2020-06-20 09:49:12,940 Node[0] Epoch[38] Batch [200-220]	Speed: 25173.97 samples/sec	accuracy=0.000962
+2020-06-20 09:49:15,582 Node[0] Epoch[38] Batch [220-240]	Speed: 25197.32 samples/sec	accuracy=0.000721
+2020-06-20 09:49:18,193 Node[0] Epoch[38] Batch [240-260]	Speed: 25488.79 samples/sec	accuracy=0.001202
+2020-06-20 09:49:20,818 Node[0] Epoch[38] Batch [260-280]	Speed: 25362.82 samples/sec	accuracy=0.001683
+2020-06-20 09:49:23,429 Node[0] Epoch[38] Batch [280-300]	Speed: 25493.28 samples/sec	accuracy=0.001442
+2020-06-20 09:49:26,051 Node[0] Epoch[38] Batch [300-320]	Speed: 25392.54 samples/sec	accuracy=0.001442
+2020-06-20 09:49:28,696 Node[0] Epoch[38] Batch [320-340]	Speed: 25160.88 samples/sec	accuracy=0.000962
+2020-06-20 09:49:31,337 Node[0] Epoch[38] Batch [340-360]	Speed: 25202.85 samples/sec	accuracy=0.001442
+2020-06-20 09:49:33,984 Node[0] Epoch[38] Batch [360-380]	Speed: 25150.36 samples/sec	accuracy=0.000962
+:::MLLOG {"namespace": "", "time_ms": 1592671774508, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 39}}
+2020-06-20 09:49:34,508 Node[0] Epoch[38] Time cost=50.710
+:::MLLOG {"namespace": "", "time_ms": 1592671774508, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 40}}
+2020-06-20 09:49:37,276 Node[0] Epoch[39] Batch [0-20]	Speed: 25270.89 samples/sec	accuracy=0.000916
+2020-06-20 09:49:39,914 Node[0] Epoch[39] Batch [20-40]	Speed: 25233.52 samples/sec	accuracy=0.001202
+2020-06-20 09:49:42,544 Node[0] Epoch[39] Batch [40-60]	Speed: 25314.88 samples/sec	accuracy=0.001442
+2020-06-20 09:49:45,168 Node[0] Epoch[39] Batch [60-80]	Speed: 25371.13 samples/sec	accuracy=0.001202
+2020-06-20 09:49:47,799 Node[0] Epoch[39] Batch [80-100]	Speed: 25292.38 samples/sec	accuracy=0.000962
+2020-06-20 09:49:50,428 Node[0] Epoch[39] Batch [100-120]	Speed: 25323.12 samples/sec	accuracy=0.000962
+2020-06-20 09:49:53,041 Node[0] Epoch[39] Batch [120-140]	Speed: 25479.74 samples/sec	accuracy=0.001923
+2020-06-20 09:49:55,666 Node[0] Epoch[39] Batch [140-160]	Speed: 25357.99 samples/sec	accuracy=0.001202
+2020-06-20 09:49:58,297 Node[0] Epoch[39] Batch [160-180]	Speed: 25299.61 samples/sec	accuracy=0.000481
+2020-06-20 09:50:00,945 Node[0] Epoch[39] Batch [180-200]	Speed: 25140.30 samples/sec	accuracy=0.001442
+2020-06-20 09:50:03,564 Node[0] Epoch[39] Batch [200-220]	Speed: 25419.15 samples/sec	accuracy=0.000721
+2020-06-20 09:50:06,201 Node[0] Epoch[39] Batch [220-240]	Speed: 25239.40 samples/sec	accuracy=0.001202
+2020-06-20 09:50:08,837 Node[0] Epoch[39] Batch [240-260]	Speed: 25254.03 samples/sec	accuracy=0.000721
+2020-06-20 09:50:11,462 Node[0] Epoch[39] Batch [260-280]	Speed: 25365.58 samples/sec	accuracy=0.000481
+2020-06-20 09:50:14,095 Node[0] Epoch[39] Batch [280-300]	Speed: 25279.17 samples/sec	accuracy=0.000721
+2020-06-20 09:50:16,737 Node[0] Epoch[39] Batch [300-320]	Speed: 25193.65 samples/sec	accuracy=0.000721
+2020-06-20 09:50:19,364 Node[0] Epoch[39] Batch [320-340]	Speed: 25342.31 samples/sec	accuracy=0.000721
+2020-06-20 09:50:22,002 Node[0] Epoch[39] Batch [340-360]	Speed: 25234.09 samples/sec	accuracy=0.000721
+2020-06-20 09:50:24,641 Node[0] Epoch[39] Batch [360-380]	Speed: 25219.36 samples/sec	accuracy=0.000481
+:::MLLOG {"namespace": "", "time_ms": 1592671825174, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 40}}
+2020-06-20 09:50:25,175 Node[0] Epoch[39] Time cost=50.666
+:::MLLOG {"namespace": "", "time_ms": 1592671825175, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 886, "epoch_num": 41}}
+2020-06-20 09:50:27,944 Node[0] Epoch[40] Batch [0-20]	Speed: 25254.70 samples/sec	accuracy=0.001832
+2020-06-20 09:50:30,583 Node[0] Epoch[40] Batch [20-40]	Speed: 25228.85 samples/sec	accuracy=0.000481
+2020-06-20 09:50:33,217 Node[0] Epoch[40] Batch [40-60]	Speed: 25269.21 samples/sec	accuracy=0.002163
+2020-06-20 09:50:35,846 Node[0] Epoch[40] Batch [60-80]	Speed: 25325.32 samples/sec	accuracy=0.000962
+2020-06-20 09:50:38,481 Node[0] Epoch[40] Batch [80-100]	Speed: 25261.40 samples/sec	accuracy=0.000481
+2020-06-20 09:50:41,112 Node[0] Epoch[40] Batch [100-120]	Speed: 25297.76 samples/sec	accuracy=0.001923
+2020-06-20 09:50:43,741 Node[0] Epoch[40] Batch [120-140]	Speed: 25322.36 samples/sec	accuracy=0.001202
+2020-06-20 09:50:46,364 Node[0] Epoch[40] Batch [140-160]	Speed: 25378.77 samples/sec	accuracy=0.000962
+2020-06-20 09:50:48,996 Node[0] Epoch[40] Batch [160-180]	Speed: 25294.76 samples/sec	accuracy=0.000481
+2020-06-20 09:50:51,637 Node[0] Epoch[40] Batch [180-200]	Speed: 25205.76 samples/sec	accuracy=0.000962
+2020-06-20 09:50:54,267 Node[0] Epoch[40] Batch [200-220]	Speed: 25313.80 samples/sec	accuracy=0.001442
+2020-06-20 09:50:56,909 Node[0] Epoch[40] Batch [220-240]	Speed: 25194.82 samples/sec	accuracy=0.000721
+2020-06-20 09:50:59,535 Node[0] Epoch[40] Batch [240-260]	Speed: 25346.07 samples/sec	accuracy=0.000721
+2020-06-20 09:51:02,177 Node[0] Epoch[40] Batch [260-280]	Speed: 25192.58 samples/sec	accuracy=0.001202
+2020-06-20 09:51:04,830 Node[0] Epoch[40] Batch [280-300]	Speed: 25091.55 samples/sec	accuracy=0.000481
+2020-06-20 09:51:07,465 Node[0] Epoch[40] Batch [300-320]	Speed: 25270.53 samples/sec	accuracy=0.000962
+2020-06-20 09:51:10,116 Node[0] Epoch[40] Batch [320-340]	Speed: 25108.47 samples/sec	accuracy=0.000962
+2020-06-20 09:51:12,749 Node[0] Epoch[40] Batch [340-360]	Speed: 25276.07 samples/sec	accuracy=0.000721
+2020-06-20 09:51:15,385 Node[0] Epoch[40] Batch [360-380]	Speed: 25260.47 samples/sec	accuracy=0.000721
+:::MLLOG {"namespace": "", "time_ms": 1592671875905, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 938, "epoch_num": 41}}
+2020-06-20 09:51:15,905 Node[0] Epoch[40] Time cost=50.730
+:::MLLOG {"namespace": "", "time_ms": 1592671875905, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 963, "epoch_num": 41}}
+2020-06-20 09:51:17,512 Node[0] Epoch[40] Validation-accuracy=0.770880
+2020-06-20 09:51:17,512 Node[0] Epoch[40] Validation-correct-count=2409.000000
+2020-06-20 09:51:17,512 Node[0] Epoch[40] Validation-total-count=3125.000000
+:::MLLOG {"namespace": "", "time_ms": 1592671877512, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 984, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1592671877512, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.76124, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 987, "epoch_num": 41}}
+:::MLLOG {"namespace": "", "time_ms": 1592671877512, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 991, "first_epoch_num": 38}}
+:::MLLOG {"namespace": "", "time_ms": 1592671877512, "event_type": "INTERVAL_END", "key": "run_stop", "value": null, "metadata": {"file": "/workspace/image_classification/common/fit.py", "lineno": 996, "status": "success"}}
+ENDING TIMING RUN AT 2020-06-20 09:52:06 AM
+RESULT,IMAGE_CLASSIFICATION,,2196,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+ENDING TIMING RUN AT 2020-06-20 09:52:11 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM
+RESULT,IMAGE_CLASSIFICATION,,2201,root,2020-06-20 09:15:30 AM

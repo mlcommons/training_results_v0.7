@@ -1,0 +1,592 @@
+diff --git a/tensorflow/compiler/xla/service/cpu/runtime_conv2d_mkl.cc b/tensorflow/compiler/xla/service/cpu/runtime_conv2d_mkl.cc
+index c60580d..6fee456 100644
+--- a/tensorflow/compiler/xla/service/cpu/runtime_conv2d_mkl.cc
++++ b/tensorflow/compiler/xla/service/cpu/runtime_conv2d_mkl.cc
+@@ -144,7 +144,7 @@ void MKLConvImpl(const EigenDevice& device, ScalarType* out, ScalarType* lhs,
+   if (need_output_conversion) {
+     net.push_back(reorder(conv1_dst_memory, user_dst_memory));
+   }
+-  stream(stream::kind::eager).submit(net).wait();
++  stream(stream::kind::eager_nostore).submit(net).wait();
+ }
+ }  // namespace
+ #endif  // INTEL_MKL
+diff --git a/tensorflow/core/kernels/mkl_aggregate_ops.cc b/tensorflow/core/kernels/mkl_aggregate_ops.cc
+index c6b783f..7dabab6 100644
+--- a/tensorflow/core/kernels/mkl_aggregate_ops.cc
++++ b/tensorflow/core/kernels/mkl_aggregate_ops.cc
+@@ -155,10 +155,10 @@ class MklAddNOp : public OpKernel {
+       auto cpu_engine = engine(engine::cpu, 0);
+       std::vector<float> coeff(num_inputs, 1.0);
+       std::vector<memory::primitive_desc> srcs_pd;
++      std::vector<MklDnnData<T>> srcs(num_inputs, MklDnnData<T>(&cpu_engine));
+       std::vector<primitive::at> inputs;
+ 
+       MklDnnData<T> dst(&cpu_engine);
+-      MklDnnData<T> src(&cpu_engine);
+       bool has_mkl_input = false;
+       int mkl_input_index = FindMKLInputIndex(ctx);
+       memory::format mkl_data_format;
+@@ -178,7 +178,6 @@ class MklAddNOp : public OpKernel {
+         MklDnnShape src_mkl_shape;
+         GetMklShape(ctx, src_idx, &src_mkl_shape);
+         memory::desc md({}, memory::data_undef, memory::format_undef);
+-        src = MklDnnData<T>(&cpu_engine);
+         const Tensor& src_tensor = MklGetInput(ctx, src_idx);
+ 
+         if (src_mkl_shape.IsMklTensor()) {
+@@ -203,8 +202,8 @@ class MklAddNOp : public OpKernel {
+           }
+         }
+         srcs_pd.push_back(memory::primitive_desc(md, cpu_engine));
+-        src.SetUsrMem(md, &src_tensor);
+-        inputs.push_back(src.GetOpMem());
++        srcs[src_idx].SetUsrMem(md, &src_tensor);
++        inputs.push_back(srcs[src_idx].GetOpMem());
+       }
+ 
+       auto sum_pd = sum::primitive_desc(coeff, srcs_pd);
+@@ -230,7 +229,7 @@ class MklAddNOp : public OpKernel {
+       // Create Sum op, and submit net for execution.
+       std::vector<primitive> net;
+       net.push_back(sum(sum_pd, inputs, dst.GetOpMem()));
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+     } catch (mkldnn::error& e) {
+       string error_msg = "Status: " + std::to_string(e.status) +
+                          ", message: " + string(e.message) + ", in file " +
+diff --git a/tensorflow/core/kernels/mkl_concat_op.cc b/tensorflow/core/kernels/mkl_concat_op.cc
+index 45f6930..2786201 100644
+--- a/tensorflow/core/kernels/mkl_concat_op.cc
++++ b/tensorflow/core/kernels/mkl_concat_op.cc
+@@ -532,7 +532,7 @@ class MklConcatOp : public OpKernel {
+         auto concat_op = concat(concat_pd, inputs, dst.GetOpMem());
+         std::vector<primitive> net;
+         net.push_back(concat_op);
+-        stream(stream::kind::eager).submit(net).wait();
++        stream(stream::kind::eager_nostore).submit(net).wait();
+ 
+         // For quantized concat, min and max outputs are also computed.
+         if (quantized_input) {
+diff --git a/tensorflow/core/kernels/mkl_conv_grad_filter_ops.cc b/tensorflow/core/kernels/mkl_conv_grad_filter_ops.cc
+index fa3264d..d45eb4b 100644
+--- a/tensorflow/core/kernels/mkl_conv_grad_filter_ops.cc
++++ b/tensorflow/core/kernels/mkl_conv_grad_filter_ops.cc
+@@ -81,7 +81,7 @@ class MklConvBwdFilterPrimitive : public MklPrimitive {
+   explicit MklConvBwdFilterPrimitive(
+       const MklConvBwdFilterParams& convBwdFilterDims)
+       : cpu_engine_(engine::cpu, 0) {
+-    context_.bwd_filter_stream.reset(new stream(stream::kind::eager));
++    context_.bwd_filter_stream.reset(new stream(stream::kind::eager_nostore));
+     // create conv primitive
+     if (context_.conv_bwd_filter == nullptr) {
+       Setup(convBwdFilterDims);
+diff --git a/tensorflow/core/kernels/mkl_conv_grad_input_ops.cc b/tensorflow/core/kernels/mkl_conv_grad_input_ops.cc
+index 943f498..147dcbe 100644
+--- a/tensorflow/core/kernels/mkl_conv_grad_input_ops.cc
++++ b/tensorflow/core/kernels/mkl_conv_grad_input_ops.cc
+@@ -81,7 +81,7 @@ class MklConvBwdInputPrimitive : public MklPrimitive {
+   explicit MklConvBwdInputPrimitive(
+       const MklConvBwdInputParams& convBwdInputDims)
+       : cpu_engine_(engine::cpu, 0) {
+-    context_.bwd_input_stream.reset(new stream(stream::kind::eager));
++    context_.bwd_input_stream.reset(new stream(stream::kind::eager_nostore));
+ 
+     // create conv primitive
+     if (context_.conv_bwd_input == nullptr) {
+@@ -481,7 +481,7 @@ class MklConvCustomBackpropInputOp
+         memory* dst_data_mem = new memory(output_tf_pd, diff_src_data);
+         net.push_back(
+             mkldnn::reorder(reorder_pd, *tmp_data_mem, *dst_data_mem));
+-        stream(stream::kind::eager).submit(net).wait();
++        stream(stream::kind::eager_nostore).submit(net).wait();
+       }
+ 
+       // delete primitive since it is not cached.
+diff --git a/tensorflow/core/kernels/mkl_conv_ops.cc b/tensorflow/core/kernels/mkl_conv_ops.cc
+index 433659a..64ee110 100644
+--- a/tensorflow/core/kernels/mkl_conv_ops.cc
++++ b/tensorflow/core/kernels/mkl_conv_ops.cc
+@@ -24,8 +24,8 @@ limitations under the License.
+ #include <map>
+ #include <vector>
+ 
+-#include "mkldnn.hpp"
+ #include "absl/strings/str_join.h"
++#include "mkldnn.hpp"
+ #include "tensorflow/core/framework/bounds_check.h"
+ #include "tensorflow/core/framework/numeric_op.h"
+ #include "tensorflow/core/framework/op_kernel.h"
+@@ -99,7 +99,7 @@ namespace tensorflow {
+ #define ADD_MD add_pd
+ #define ALGORITHM mkldnn
+ #define ALGORITHM_UNDEF ALGORITHM::algorithm_undef
+-#define CPU_STREAM(engine) stream(stream::kind::eager)
++#define CPU_STREAM(engine) stream(stream::kind::eager_nostore)
+ #define DATA_WITH_ENGINE(data, engine) data
+ #define DST_MD dst_pd
+ #define ENGINE_CPU engine::cpu
+@@ -570,17 +570,15 @@ class MklConvOp : public OpKernel {
+       OP_REQUIRES(context, dilations_.size() == 5,
+                   errors::InvalidArgument("Dilation rates field must "
+                                           "specify 5 dimensions"));
+-      OP_REQUIRES(context,
+-                  (GetTensorDim(dilations_, data_format_, 'N') == 1 &&
+-                   GetTensorDim(dilations_, data_format_, 'C') == 1),
++      OP_REQUIRES(context, (GetTensorDim(dilations_, data_format_, 'N') == 1 &&
++                            GetTensorDim(dilations_, data_format_, 'C') == 1),
+                   errors::InvalidArgument(
+                       "Current implementation does not yet support "
+                       "dilations rates in the batch and depth dimensions."));
+       OP_REQUIRES(
+-          context,
+-          (GetTensorDim(dilations_, data_format_, '0') > 0 &&
+-           GetTensorDim(dilations_, data_format_, '1') > 0 &&
+-           GetTensorDim(dilations_, data_format_, '2') > 0),
++          context, (GetTensorDim(dilations_, data_format_, '0') > 0 &&
++                    GetTensorDim(dilations_, data_format_, '1') > 0 &&
++                    GetTensorDim(dilations_, data_format_, '2') > 0),
+           errors::InvalidArgument("Dilated rates should be larger than 0."));
+     }
+   }
+@@ -856,7 +854,7 @@ class MklConvOp : public OpKernel {
+           memory* dst_data_mem = new memory(output_tf_pd, dst_data);
+           net.push_back(
+               mkldnn::reorder(reorder_pd, *tmp_data_mem, *dst_data_mem));
+-          stream(stream::kind::eager).submit(net).wait();
++          stream(stream::kind::eager_nostore).submit(net).wait();
+         }
+       }
+ 
+@@ -1029,13 +1027,18 @@ class MklConvOp : public OpKernel {
+             const_cast<Toutput*>(add_tensor.flat<Toutput>().data()));
+         void* dst_buf =
+             static_cast<void*>((*output_tensor)->flat<Ttemp_output>().data());
+-        auto add = new memory(add_pd, add_buf);
+-        auto dst = new memory(dst_pd, dst_buf);
+-        auto reorder_desc = mkldnn::reorder::primitive_desc(add_pd, dst_pd);
+-
+-        std::vector<mkldnn::primitive> net;
+-        net.push_back(mkldnn::reorder(reorder_desc, *add, *dst));
+-        stream(stream::kind::eager).submit(net).wait();
++        fuse_add_src_.reset(
++           new MEMORY_CONSTRUCTOR(ADD_MD, this->cpu_engine_, add_buf));
++        fuse_add_dst_.reset(
++           new MEMORY_CONSTRUCTOR(DST_MD, this->cpu_engine_, dst_buf));
++        auto reorder_desc =
++            REORDER_PD_CONSTRUCTOR(ADD_MD, DST_MD, this->cpu_engine_);
++        CreateAndExecuteReorder(reorder_desc, *fuse_add_src_, *fuse_add_dst_,
++                                this->cpu_engine_);
++
++        //std::vector<mkldnn::primitive> net;
++        //net.push_back(mkldnn::reorder(reorder_desc, *add, *dst));
++        //stream(stream::kind::eager_nostore).submit(net).wait();
+       }
+     }
+   }
+@@ -1043,6 +1046,8 @@ class MklConvOp : public OpKernel {
+   engine cpu_engine_ = engine(ENGINE_CPU, 0);
+ 
+  private:
++  std::shared_ptr<mkldnn::memory> fuse_add_src_;
++  std::shared_ptr<mkldnn::memory> fuse_add_dst_;
+   std::vector<int32> strides_;
+   std::vector<int32> dilations_;
+   std::vector<Tpadding> padding_list_;
+@@ -1198,7 +1203,7 @@ class MklConvOp : public OpKernel {
+                                         filter->GetOpMem(),
+                                         output->GetOpMem()));
+     }
+-    stream(stream::kind::eager).submit(net).wait();
++    stream(stream::kind::eager_nostore).submit(net).wait();
+ #endif  // ENABLE_MKLDNN_V1
+   }
+ 
+@@ -1593,10 +1598,23 @@ class MklQuantizedConv2DOp
+                                 Tbias, x, this->cpu_engine_);
+       void* bias_buf = static_cast<void*>(
+           const_cast<Tbias*>(bias_tensor.flat<Tbias>().data()));
+-      input_bias_ =
+-          new MEMORY_CONSTRUCTOR(bias_md, this->cpu_engine_, bias_buf);
+-      scaled_bias_ = new MEMORY_CONSTRUCTOR_WITHOUT_DATA(
+-          conv_fwd_pd->PRIMITIVE_DESC_BIAS, this->cpu_engine_);
++      if (!input_bias_) {
++        input_bias_ =
++            new MEMORY_CONSTRUCTOR(bias_md, this->cpu_engine_, bias_buf);
++      } else {
++        input_bias_->set_data_handle(bias_buf);
++      }
++
++      if (!scaled_bias_buf_)
++        AllocTmpBuffer<Tbias>(context, &scaled_bias_tensor_,
++                              conv_fwd_pd->bias_primitive_desc(),
++                              &scaled_bias_buf_);
++      if (!scaled_bias_) {
++        scaled_bias_ =
++            new MEMORY_CONSTRUCTOR(bias_md, this->cpu_engine_, scaled_bias_buf_);
++      } else {
++        scaled_bias_->set_data_handle(scaled_bias_buf_);
++      }
+       auto reorder_desc = REORDER_PD_CONSTRUCTOR_WITH_ATTR(
+           input_bias_->GET_DESC, scaled_bias_->GET_DESC, this->cpu_engine_,
+           bias_attr);
+@@ -1610,6 +1628,9 @@ class MklQuantizedConv2DOp
+ 
+   memory* input_bias_ = nullptr;
+   memory* scaled_bias_ = nullptr;
++
++  Tensor scaled_bias_tensor_;
++  void* scaled_bias_buf_ = nullptr;
+ };
+ 
+ template <typename Device, typename Tbias, typename Toutput,
+@@ -1640,17 +1661,7 @@ class MklQuantizedConv2DSumReluOp
+     : public MklQuantizedConv2DOp<Device, Tbias, Toutput, Ttemp_output,
+                                   bias_enabled, is_depthwise> {
+  public:
+-  virtual ~MklQuantizedConv2DSumReluOp() {
+-    if (this->summand_ != nullptr) {
+-      delete this->summand_;
+-      summand_ = nullptr;
+-    }
+-
+-    if (this->dst_ != nullptr) {
+-      delete this->dst_;
+-      dst_ = nullptr;
+-    }
+-  }
++  virtual ~MklQuantizedConv2DSumReluOp() {}
+ 
+   explicit MklQuantizedConv2DSumReluOp(OpKernelConstruction* context)
+       : MklQuantizedConv2DOp<Device, Tbias, Toutput, Ttemp_output, bias_enabled,
+@@ -1785,18 +1796,18 @@ class MklQuantizedConv2DSumReluOp
+         static_cast<void*>(const_cast<Tbias*>(summand.flat<Tbias>().data()));
+     void* dst_buf =
+         static_cast<void*>((*output_tensor)->flat<Ttemp_output>().data());
+-    summand_ =
+-        new MEMORY_CONSTRUCTOR(SUMMAND_MD, this->cpu_engine_, summand_buf);
+-    dst_ = new MEMORY_CONSTRUCTOR(conv_prim_desc.PRIMITIVE_DESC_DST,
+-                                  this->cpu_engine_, dst_buf);
++    summand_.reset(
++        new MEMORY_CONSTRUCTOR(SUMMAND_MD, this->cpu_engine_, summand_buf));
++    dst_.reset(new MEMORY_CONSTRUCTOR(conv_prim_desc.PRIMITIVE_DESC_DST,
++                                      this->cpu_engine_, dst_buf));
+     auto reorder_desc = REORDER_PD_CONSTRUCTOR_WITH_ATTR(
+         SUMMAND_MD, conv_prim_desc.PRIMITIVE_DESC_DST, this->cpu_engine_,
+         reorder_attr);
+     CreateAndExecuteReorder(reorder_desc, *summand_, *dst_, this->cpu_engine_);
+   }
+ 
+-  memory* summand_ = nullptr;
+-  memory* dst_ = nullptr;
++  std::shared_ptr<mkldnn::memory> summand_;
++  std::shared_ptr<mkldnn::memory> dst_;
+ };
+ 
+ // INT8 kernel registration
+diff --git a/tensorflow/core/kernels/mkl_dequantize_op.cc b/tensorflow/core/kernels/mkl_dequantize_op.cc
+index 4c9dbf4..dbfdd22 100644
+--- a/tensorflow/core/kernels/mkl_dequantize_op.cc
++++ b/tensorflow/core/kernels/mkl_dequantize_op.cc
+@@ -148,7 +148,7 @@ class MklDequantizeOp : public OpKernel {
+       std::vector<primitive> net;
+       net.push_back(
+           mkldnn::reorder(reorder_pd, *src.GetUsrMem(), *dst.GetUsrMem()));
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+     } catch (mkldnn::error& e) {
+       string error_msg = "Status: " + std::to_string(e.status) +
+                          ", message: " + string(e.message) + ", in file " +
+diff --git a/tensorflow/core/kernels/mkl_fused_batch_norm_op.cc b/tensorflow/core/kernels/mkl_fused_batch_norm_op.cc
+index 4fbacc1..d3b7eab 100644
+--- a/tensorflow/core/kernels/mkl_fused_batch_norm_op.cc
++++ b/tensorflow/core/kernels/mkl_fused_batch_norm_op.cc
+@@ -48,7 +48,7 @@ class MklFusedBatchNormFwdPrimitive : public MklPrimitive {
+  public:
+   explicit MklFusedBatchNormFwdPrimitive(const MklBatchNormFwdParams& fwdParams)
+       : cpu_engine_(engine::cpu, 0) {
+-    context_.fwd_stream.reset(new mkldnn::stream(mkldnn::stream::kind::eager));
++    context_.fwd_stream.reset(new mkldnn::stream(mkldnn::stream::kind::eager_nostore));
+     if (context_.bn_fwd == nullptr) Setup(fwdParams);
+   }
+ 
+@@ -291,7 +291,7 @@ class MklFusedBatchNormBwdPrimitive : public MklPrimitive {
+  public:
+   explicit MklFusedBatchNormBwdPrimitive(const MklBatchNormBwdParams& bwdParams)
+       : cpu_engine_(engine::cpu, 0) {
+-    context_.bwd_stream.reset(new mkldnn::stream(mkldnn::stream::kind::eager));
++    context_.bwd_stream.reset(new mkldnn::stream(mkldnn::stream::kind::eager_nostore));
+     if (context_.bn_bwd == nullptr) Setup(bwdParams);
+   }
+ 
+diff --git a/tensorflow/core/kernels/mkl_input_conversion_op.cc b/tensorflow/core/kernels/mkl_input_conversion_op.cc
+index 6e652bd..7544dce 100644
+--- a/tensorflow/core/kernels/mkl_input_conversion_op.cc
++++ b/tensorflow/core/kernels/mkl_input_conversion_op.cc
+@@ -147,7 +147,7 @@ class MklInputConversionOp : public OpKernel {
+                        memory::primitive_desc(input1_md, cpu_engine),
+                        tensor_out, &net),
+                    true);
+-          stream(stream::kind::eager).submit(net).wait();
++          stream(stream::kind::eager_nostore).submit(net).wait();
+ 
+           // Input1 will be passed through
+           ForwardMklTensorInToOut(context, kInputIndex_1, kInputIndex_1);
+@@ -253,7 +253,7 @@ class MklInputConversionOp : public OpKernel {
+         // shape to the other tensor.
+         CHECK(tensor_out->CopyFrom(*tf_tensor, tensor_out->shape()));
+       } else {
+-        stream(stream::kind::eager).submit(net).wait();
++        stream(stream::kind::eager_nostore).submit(net).wait();
+       }
+ 
+       // -- The tensor in MKL format passes through --
+diff --git a/tensorflow/core/kernels/mkl_lrn_op.cc b/tensorflow/core/kernels/mkl_lrn_op.cc
+index d177bfc..4f2a6bc 100644
+--- a/tensorflow/core/kernels/mkl_lrn_op.cc
++++ b/tensorflow/core/kernels/mkl_lrn_op.cc
+@@ -188,7 +188,7 @@ class MklLRNOp : public OpKernel {
+       net.push_back(lrn_forward(lrn_fwd_desc, src_dnn_data->GetOpMem(),
+                                 dst_dnn_data->GetOpMem()));
+     }
+-    stream(stream::kind::eager).submit(net).wait();
++    stream(stream::kind::eager_nostore).submit(net).wait();
+   }
+ 
+   void AllocateOutputTensor(
+@@ -505,7 +505,7 @@ class MklLRNGradOp : public OpKernel {
+                                  workspace_dnn_data->GetOpMem(),
+                                  output_diff_src->GetOpMem()));
+     }
+-    stream(stream::kind::eager).submit(net).wait();
++    stream(stream::kind::eager_nostore).submit(net).wait();
+   }
+ 
+   void ConfigureWorkspace(const Tensor& workspace_tensor,
+diff --git a/tensorflow/core/kernels/mkl_pooling_ops_common.h b/tensorflow/core/kernels/mkl_pooling_ops_common.h
+index c2c33d9..6ef9b1a 100644
+--- a/tensorflow/core/kernels/mkl_pooling_ops_common.h
++++ b/tensorflow/core/kernels/mkl_pooling_ops_common.h
+@@ -67,7 +67,7 @@ class MklPoolingFwdPrimitive : public MklPrimitive {
+  public:
+   explicit MklPoolingFwdPrimitive(const MklPoolingParams& fwdParams)
+       : cpu_engine_(engine::cpu, 0) {
+-    context_.fwd_stream.reset(new stream(stream::kind::eager));
++    context_.fwd_stream.reset(new stream(stream::kind::eager_nostore));
+     if (context_.fwd == nullptr) Setup(fwdParams);
+   }
+ 
+@@ -208,7 +208,7 @@ class MklPoolingBwdPrimitive : public MklPrimitive {
+  public:
+   explicit MklPoolingBwdPrimitive(const MklPoolingParams& bwdParams)
+       : cpu_engine(engine::cpu, 0) {
+-    context_.bwd_stream.reset(new stream(stream::kind::eager));
++    context_.bwd_stream.reset(new stream(stream::kind::eager_nostore));
+     if (context_.bwd == nullptr) Setup(bwdParams);
+   }
+ 
+diff --git a/tensorflow/core/kernels/mkl_qmatmul_op.cc b/tensorflow/core/kernels/mkl_qmatmul_op.cc
+index 4aff02a..6b14f51 100644
+--- a/tensorflow/core/kernels/mkl_qmatmul_op.cc
++++ b/tensorflow/core/kernels/mkl_qmatmul_op.cc
+@@ -147,7 +147,7 @@ class MklDnnMatMulFwdPrimitive : public MklPrimitive {
+   explicit MklDnnMatMulFwdPrimitive(
+       const MklDnnMatMulFwdParams& matmulFwdParams)
+       : cpu_engine_(engine::cpu, 0) {
+-    context_.fwd_stream.reset(new stream(stream::kind::eager));
++    context_.fwd_stream.reset(new stream(stream::kind::eager_nostore));
+     // Create matmul primitive
+     if (context_.matmul_fwd == nullptr) {
+       Setup(matmulFwdParams);
+@@ -713,7 +713,7 @@ class MklDnnQuantizedMatMulOp : public OpKernel {
+             scaled_bias_->get_primitive_desc(), bias_attr);
+         net.push_back(
+             mkldnn::reorder(reorder_desc, *input_bias_, *scaled_bias_));
+-        stream(stream::kind::eager).submit(net).wait();
++        stream(stream::kind::eager_nostore).submit(net).wait();
+         return reinterpret_cast<Tbias*>(scaled_bias_->get_data_handle());
+       } else {
+         context->CtxFailure(
+diff --git a/tensorflow/core/kernels/mkl_quantize_op.cc b/tensorflow/core/kernels/mkl_quantize_op.cc
+index 1c7e6ff..db7c3a6 100644
+--- a/tensorflow/core/kernels/mkl_quantize_op.cc
++++ b/tensorflow/core/kernels/mkl_quantize_op.cc
+@@ -205,7 +205,7 @@ class MklQuantizeV2Op : public OpKernel {
+     reorder my_reorder = reorder(reorder_desc, primitive::at(*src.GetUsrMem()),
+                                  *dst.GetUsrMem());
+     std::vector<primitive> net{my_reorder};
+-    stream(stream::kind::eager).submit(net).wait();
++    stream(stream::kind::eager_nostore).submit(net).wait();
+   }
+ 
+  private:
+diff --git a/tensorflow/core/kernels/mkl_relu_op.cc b/tensorflow/core/kernels/mkl_relu_op.cc
+index 48ee5e0..c7b9344 100644
+--- a/tensorflow/core/kernels/mkl_relu_op.cc
++++ b/tensorflow/core/kernels/mkl_relu_op.cc
+@@ -63,7 +63,7 @@ class MklEltwiseFwdPrimitive : public MklPrimitive {
+     // store expected format
+     context_.src_fmt =
+         static_cast<mkldnn::memory::format>(fwdParams.src_md.data.format);
+-    context_.fwd_stream.reset(new stream(stream::kind::eager));
++    context_.fwd_stream.reset(new stream(stream::kind::eager_nostore));
+ 
+     // create eltwise primitive
+     if (context_.eltwise_fwd == nullptr) {
+@@ -248,7 +248,7 @@ class MklEltwiseBwdPrimitive : public MklPrimitive {
+         static_cast<mkldnn::memory::format>(bwdParams.common_md.data.format);
+     context_.diff_dst_fmt =
+         static_cast<mkldnn::memory::format>(bwdParams.common_md.data.format);
+-    context_.bwd_stream.reset(new stream(stream::kind::eager));
++    context_.bwd_stream.reset(new stream(stream::kind::eager_nostore));
+     // create eltwise primitive
+     if (context_.eltwise_bwd == nullptr) {
+       Setup(bwdParams);
+diff --git a/tensorflow/core/kernels/mkl_requantize_per_channel_op.cc b/tensorflow/core/kernels/mkl_requantize_per_channel_op.cc
+index 8fbb16c..0a4efef 100644
+--- a/tensorflow/core/kernels/mkl_requantize_per_channel_op.cc
++++ b/tensorflow/core/kernels/mkl_requantize_per_channel_op.cc
+@@ -129,7 +129,7 @@ class MklRequantizePerChannelOp : public OpKernel {
+       std::vector<mkldnn::primitive> net;
+       net.push_back(
+           mkldnn::reorder(reorder_pd, *input_mem_prim_, *output_mem_prim_));
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+ 
+       Tensor* output_min = nullptr;
+       Tensor* output_max = nullptr;
+diff --git a/tensorflow/core/kernels/mkl_slice_op.cc b/tensorflow/core/kernels/mkl_slice_op.cc
+index 35b8d87..1a58272 100644
+--- a/tensorflow/core/kernels/mkl_slice_op.cc
++++ b/tensorflow/core/kernels/mkl_slice_op.cc
+@@ -177,7 +177,7 @@ template <typename T>
+ class MklSlicePrimitive : public MklPrimitive {
+  public:
+   explicit MklSlicePrimitive(const MklSliceParams& sliceParams) {
+-    context_.slice_stream.reset(new stream(stream::kind::eager));
++    context_.slice_stream.reset(new stream(stream::kind::eager_nostore));
+     Setup(sliceParams);
+   }
+ 
+diff --git a/tensorflow/core/kernels/mkl_softmax_op.cc b/tensorflow/core/kernels/mkl_softmax_op.cc
+index e84d007..e005baa 100644
+--- a/tensorflow/core/kernels/mkl_softmax_op.cc
++++ b/tensorflow/core/kernels/mkl_softmax_op.cc
+@@ -166,7 +166,7 @@ class MklSoftmaxOp : public OpKernel {
+       // following 3 are common for all mkl dnn ops
+       std::vector<primitive> net;
+       net.push_back(softmax_fwd);
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+     } catch (mkldnn::error& e) {
+       string error_msg = "Status: " + std::to_string(e.status) +
+                          ", message: " + string(e.message) + ", in file " +
+diff --git a/tensorflow/core/kernels/mkl_transpose_op.cc b/tensorflow/core/kernels/mkl_transpose_op.cc
+index f6d8470..6c94100 100644
+--- a/tensorflow/core/kernels/mkl_transpose_op.cc
++++ b/tensorflow/core/kernels/mkl_transpose_op.cc
+@@ -142,7 +142,7 @@ Status MKLTransposeND(OpKernelContext* context, const Tensor& in_tensor,
+ 
+     std::vector<primitive> net;
+     net.push_back(FindOrCreateReorder<T>(in.GetUsrMem(), out.GetUsrMem()));
+-    stream(stream::kind::eager).submit(net).wait();
++    stream(stream::kind::eager_nostore).submit(net).wait();
+     return Status::OK();
+   } catch (mkldnn::error& e) {
+     string error_msg = "Status: " + std::to_string(e.status) +
+diff --git a/tensorflow/core/util/mkl_util.h b/tensorflow/core/util/mkl_util.h
+index 54259ef..198feae 100644
+--- a/tensorflow/core/util/mkl_util.h
++++ b/tensorflow/core/util/mkl_util.h
+@@ -681,7 +681,7 @@ inline Tensor ConvertMklToTF(OpKernelContext* context, const Tensor& mkl_tensor,
+       std::vector<primitive> net;
+       CHECK_EQ(input.CheckReorderToOpMem(output_tf_pd, &output_tensor, &net),
+                true);
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+ #endif  // ENABLE_MKLDNN_V1
+     } else {
+       // If not, just forward input tensor to output tensor.
+@@ -1243,7 +1243,7 @@ inline void CreateAndExecuteReorder(const reorder::primitive_desc& reorder_desc,
+   cpu_stream.wait();
+ #else
+   net.push_back(mkldnn::reorder(reorder_desc, src_mem, dst_mem));
+-  stream(stream::kind::eager).submit(net).wait();
++  stream(stream::kind::eager_nostore).submit(net).wait();
+ #endif  // ENABLE_MKLDNN_V1
+ }
+ 
+@@ -1573,7 +1573,7 @@ class MklDnnData {
+       reorder_memory_ = new memory(op_pd);
+       std::vector<primitive> net;
+       net.push_back(FindOrCreateReorder<T>(user_memory_, reorder_memory_));
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+ #endif  // ENABLE_MKLDNN_V1
+       return true;
+     }
+@@ -1651,7 +1651,7 @@ class MklDnnData {
+       std::vector<primitive> net;
+       reorder_memory_ = new memory(op_pd, reorder_data_handle);
+       net.push_back(FindOrCreateReorder<T>(user_memory_, reorder_memory_));
+-      stream(stream::kind::eager).submit(net).wait();
++      stream(stream::kind::eager_nostore).submit(net).wait();
+ #endif  // ENABLE_MKLDNN_V1
+       return true;
+     }
+@@ -1784,7 +1784,7 @@ class MklDnnData {
+     cpu_stream.wait();
+ #else
+     net.push_back(FindOrCreateReorder<T>(reorder_memory_, user_memory_));
+-    stream(stream::kind::eager).submit(net).wait();
++    stream(stream::kind::eager_nostore).submit(net).wait();
+ #endif  // ENABLE_MKLDNN_V1
+   }
+ };
+diff --git a/tensorflow/workspace.bzl b/tensorflow/workspace.bzl
+index 2548473..5a2ccc1 100755
+--- a/tensorflow/workspace.bzl
++++ b/tensorflow/workspace.bzl
+@@ -135,14 +135,16 @@ def tf_repositories(path_prefix = "", tf_repo_name = ""):
+     tf_http_archive(
+         name = "mkl_dnn",
+         build_file = clean_dep("//third_party/mkl_dnn:mkldnn.BUILD"),
+-        sha256 = "74675e93eef339ff3d9a9be95c15d0c7ad8736a5356c23428ab2e33dcdb8e3e1",
+-        strip_prefix = "mkl-dnn-0.20.6",
++        sha256 = "31e78581e59d7e60d4becaba3834fc6a5bf2dccdae3e16b7f70d89ceab38423f",
++        strip_prefix = "mkl-dnn-0.21.3",
+         urls = [
+-            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/archive/v0.20.6.tar.gz",
+-            "https://github.com/intel/mkl-dnn/archive/v0.20.6.tar.gz",
++            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/intel/mkl-dnn/archive/v0.21.3.tar.gz",
++            "https://github.com/intel/mkl-dnn/archive/v0.21.3.tar.gz",
+         ],
+     )
+ 
++
++
+     tf_http_archive(
+         name = "mkl_dnn_v1",
+         build_file = clean_dep("//third_party/mkl_dnn:mkldnn.BUILD"),
+diff --git a/third_party/mkl_dnn/mkldnn.BUILD b/third_party/mkl_dnn/mkldnn.BUILD
+index 35832ff..71dde75 100644
+--- a/third_party/mkl_dnn/mkldnn.BUILD
++++ b/third_party/mkl_dnn/mkldnn.BUILD
+@@ -36,7 +36,7 @@ template_rule(
+ # be set to NA.
+ # TODO(agramesh1) Automatically get the version numbers from CMakeLists.txt.
+ # TODO(bhavanis): MKL-DNN minor version needs to be updated for MKL-DNN v1.x.
+-# The current version numbers will work only if MKL-DNN v0.20 is used.
++# The current version numbers will work only if MKL-DNN v0.21 is used.
+ 
+ template_rule(
+     name = "mkldnn_version_h",
+@@ -44,7 +44,7 @@ template_rule(
+     out = "include/mkldnn_version.h",
+     substitutions = {
+         "@MKLDNN_VERSION_MAJOR@": "0",
+-        "@MKLDNN_VERSION_MINOR@": "20",
++        "@MKLDNN_VERSION_MINOR@": "21",
+         "@MKLDNN_VERSION_PATCH@": "3",
+         "@MKLDNN_VERSION_HASH@": "N/A",
+     },

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+## DL Network & Optimizer
+NETWORK="resnet-v1b-normconv-fl"
+OPTIMIZER="sgdwfastlars"
+LR="38"
+WARMUP_EPOCHS="25"
+EVAL_PERIOD="4"
+WD="0.0002"
+LARSETA="0.001"
+LABELSMOOTHING="0.1"
+LRSCHED="pow2"
+
+##data preprocessing
+DALI_PREFETCH_QUEUE="3"
+DALI_NVJPEG_MEMPADDING="256"
+DALI_CACHE_SIZE=6144  # maybe 0 ,Maybe best to set this to a larger value such as 6144 for scale out
+DALI_ROI_DECODE="1"  # Maybe best to set this to 0 for scale out
+
+## PAI Hororod interface scale
+KVSTORE="horovod"
+export HOROVOD_CYCLE_TIME=0.1
+export HOROVOD_FUSION_THRESHOLD=67108864
+export HOROVOD_NUM_STREAMS=2
+
+## MLPERF Scale
+export MXNET_CUDNN_SUPPLY_NORMCONV_CONSTANTS=1
+export MXNET_HOROVOD_NUM_GROUPS=16
+export NHWC_BATCHNORM_LAUNCH_MARGIN=32
+export MXNET_EXEC_BULK_EXEC_MAX_NODE_TRAIN_FWD=999
+export MXNET_EXEC_BULK_EXEC_MAX_NODE_TRAIN_BWD=25
+
+## PAI MxNet Scale
+export MXNET_SCALE_ADAPTION=1
+export MXNET_CUDNN_AUTOTUNE_DEFAULT=0
+
+##EFLOPS run parms
+PAIEFLOPSNNODES=128 ##for reference only, linear scale
+WALLTIME=12:00:00
+
+##EFLOPS config params
+PAIEFLOPSNGPU=8
+PAIEFLOPSSOCKETCORES=20

@@ -1,0 +1,1 @@
+python main.py --learning_rate=27 --momentum=0.95 --batch_size=32 --warmup_epochs=5.6

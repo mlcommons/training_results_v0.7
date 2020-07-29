@@ -1,0 +1,112 @@
+image_classification:
+    extends: .build
+    variables: &RN50_VARS
+      FRAMEWORK: "mxnet"
+      DATADIR: "/raid/datasets/train-val-recordio-passthrough"
+    rules:
+      - if: '$CI_PIPELINE_SOURCE =~ /^schedule$/'
+        when: always        
+      - if: '$CI_PIPELINE_SOURCE =~ /^(web|merge_request_event|trigger)$/'
+        when: manual
+      - if: '$CI_PIPELINE_SOURCE == "push"'
+        changes:
+            - image_classification/mxnet/**/*
+            - .gitlab-ci.yml
+            - ci/templates.yml
+        when: always
+      - when: manual
+
+.rn50: &RN50_ON_CLUSTER
+   extends: .benchmark
+   needs: ["image_classification"]
+   variables:
+      <<: *RN50_VARS
+
+.rn50_dgx1: &RN50_ON_CLUSTER_DGX1
+   extends: 
+     - .rn50
+     - .DGX1
+
+.rn50_dgx2: &RN50_ON_CLUSTER_DGX2
+   extends: 
+     - .rn50
+     - .DGX2
+     
+.rn50_dgxa100: &RN50_ON_CLUSTER_DGXA100
+   extends: 
+     - .rn50
+     - .DGXA100
+
+.dr_rn50: &DR_RN50_ON_CLUSTER
+   extends: .rn50
+   parallel: 10
+   needs: ["image_classification"]
+
+.dr_rn50_dgx1: &DR_RN50_ON_CLUSTER_DGX1
+   extends: 
+     - .dr_rn50
+     - .DGX1
+
+.dr_rn50_dgx2: &DR_RN50_ON_CLUSTER_DGX2
+   extends: 
+     - .dr_rn50
+     - .DGX2
+
+.dr_rn50_nexp: &DR_RN50_ON_CLUSTER_NEXP
+   extends: .rn50
+   parallel: 2  # NEXP=5 * 2 parallel jobs = 10 total experiments
+   needs: ["image_classification"]
+
+.dr_rn50_nexp_dgx1: &DR_RN50_ON_CLUSTER_NEXP_DGX1
+   extends: 
+     - .dr_rn50_nexp
+     - .DGX1
+
+.dr_rn50_nexp_dgx2: &DR_RN50_ON_CLUSTER_NEXP_DGX2
+   extends: 
+     - .dr_rn50_nexp
+     - .DGX2
+
+.dr_rn50_nexp_dgxa100: &DR_RN50_ON_CLUSTER_NEXP_DGXA100
+   extends: 
+     - .dr_rn50_nexp
+     - .DGXA100
+
+.rn50_compliance_dgx1: &RN50_COMPLIANCE_DGX1
+    extends: .compliance_dgx1
+    variables:
+      <<: *RN50_VARS
+
+.rn50_compliance_dgx2: &RN50_COMPLIANCE_DGX2
+    extends: .compliance_dgx2
+    variables:
+      <<: *RN50_VARS
+
+.rn50_compliance_dgxa100: &RN50_COMPLIANCE_DGXA100
+    extends: .compliance_dgxa100
+    variables:
+      <<: *RN50_VARS
+
+.rn50_compliance_dgx1: &RN50_COMPLIANCE_DGX1
+    extends: .compliance_dgx1
+    variables:
+      <<: *RN50_VARS
+
+.rn50_compliance_dgx2: &RN50_COMPLIANCE_DGX2
+    extends: .compliance_dgx2
+    variables:
+      <<: *RN50_VARS
+
+.rn50_compliance_dgxa100: &RN50_COMPLIANCE_DGXA100
+    extends: .compliance_dgxa100
+    variables:
+      <<: *RN50_VARS
+
+include:
+    - local: '/image_classification/mxnet/ci_rn50_dgx1.yml'
+    - local: '/image_classification/mxnet/ci_rn50_dgx2.yml'
+    - local: '/image_classification/mxnet/ci_rn50_dgxa100.yml'
+    - local: '/image_classification/mxnet/ci_rn50_profile.yml'
+    - local: '/image_classification/mxnet/ci_rn50_dgrad_as_gemm.yml'
+    - local: '/image_classification/mxnet/ci_rn50_dgxa100_fusion.yml'
+    - local: '/image_classification/mxnet/ci_v7_submit.yml'

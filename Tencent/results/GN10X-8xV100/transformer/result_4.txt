@@ -1,0 +1,238 @@
++ echo 'Beginning trial 5 of 10'
+Beginning trial 5 of 10
++ docker exec -it translation python -c '
+import mlperf_log_utils
+from mlperf_logging.mllog import constants
+mlperf_log_utils.mlperf_submission_log(constants.TRANSFORMER)'
+:::MLLOG {"namespace": "", "time_ms": 1593195853393, "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "transformer", "metadata": {"file": "/workspace/translation/mlperf_log_utils.py", "lineno": 84}}
+:::MLLOG {"namespace": "", "time_ms": 1593195853441, "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "NVIDIA", "metadata": {"file": "/workspace/translation/mlperf_log_utils.py", "lineno": 89}}
+:::MLLOG {"namespace": "", "time_ms": 1593195853441, "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "closed", "metadata": {"file": "/workspace/translation/mlperf_log_utils.py", "lineno": 93}}
+:::MLLOG {"namespace": "", "time_ms": 1593195853441, "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "onprem", "metadata": {"file": "/workspace/translation/mlperf_log_utils.py", "lineno": 97}}
+:::MLLOG {"namespace": "", "time_ms": 1593195853441, "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "1xSUBMISSION_PLATFORM_PLACEHOLDER", "metadata": {"file": "/workspace/translation/mlperf_log_utils.py", "lineno": 101}}
++ '[' 1 -eq 1 ']'
++ sync
++ sudo /sbin/sysctl vm.drop_caches=3
+vm.drop_caches = 3
++ docker exec -it translation python -c '
+from mlperf_logging.mllog import constants
+from mlperf_log_utils import log_event
+log_event(key=constants.CACHE_CLEAR, value=True)'
+:::MLLOG {"namespace": "", "time_ms": 1593195860756, "event_type": "POINT_IN_TIME", "key": "cache_clear", "value": true, "metadata": {"file": "<string>", "lineno": 4}}
++ export SEED=18605
++ SEED=18605
++ docker exec -it --env=DGXHT --env=DGXNGPU --env=DGXNNODES --env=DGXNSOCKET --env=DGXSOCKETCORES --env=DGXSYSTEM --env=EXTRA_PARAMS --env=LEARNING_RATE --env=MAX_TOKENS --env=WALLTIME --env=WARMUP_UPDATES --env=SEED translation ./run_and_time.sh
+Run vars: id 14383 gpus 8 mparams 
++ SEED=18605
++ MAX_TOKENS=8192
++ DATASET_DIR=/data
++ MODE=TRAIN
++ NUMEPOCHS=30
++ case "$MODE" in
++ source run_training.sh
++++ date +%s
+++ START=1593195861
++++ date '+%Y-%m-%d %r'
+++ START_FMT='2020-06-26 06:24:21 PM'
+++ echo 'STARTING TIMING RUN AT 2020-06-26 06:24:21 PM'
+STARTING TIMING RUN AT 2020-06-26 06:24:21 PM
+++ [[ '' -ne 1 ]]
+++ DISTRIBUTED_INIT_METHOD='--distributed-init-method env://'
+++ export DGXSYSTEM
+++ export SLURM_NTASKS_PER_NODE
+++ export SLURM_NNODES
+++ declare -a CMD
+++ '[' -n '' ']'
+++ CMD=('python' '-u' '-m' 'bind_launch' "--nsockets_per_node=${DGXNSOCKET}" "--ncores_per_socket=${DGXSOCKETCORES}" "--nproc_per_node=${DGXNGPU}")
+++ python -u -m bind_launch --nsockets_per_node=2 --ncores_per_socket=16 --nproc_per_node=8 train.py /data --seed 18605 --arch transformer_wmt_en_de_big_t2t --share-all-embeddings --optimizer adam --adam-betas '(0.9, 0.997)' --adam-eps 1e-9 --clip-norm 0.0 --lr-scheduler inverse_sqrt --warmup-init-lr 0 --warmup-updates 750 --lr 1.9e-3 --min-lr 0.0 --dropout 0.1 --weight-decay 0.0 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 --max-tokens 8192 --max-epoch 30 --target-bleu 25.0 --ignore-case --no-save --update-freq 1 --fp16 --seq-len-multiple 2 --source_lang en --target_lang de --bucket_growth_factor 1.035 --batching_scheme v0p5_better --batch_multiple_strategy dynamic --fast-xentropy --max-len-a 1 --max-len-b 50 --lenpen 0.6 --no-progress-bar --dataloader-num-workers 2 --enable-dataloader-pin-memory --multihead-attn-impl fast_with_lyrnrm_and_dropoutadd --distributed-init-method env:// --distributed-weight-update 2 --dwu-num-blocks 4 --dwu-num-rs-pg 2 --dwu-num-ar-pg 2 --dwu-num-ag-pg 0 --dwu-overlap-reductions --dwu-num-chunks 1 --dwu-flat-mt --dwu-compute-L2-grad-norm --max-source-positions 64 --max-target-positions 64 --adam-betas '(0.9,0.98)'
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 6
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 5
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 1
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 3
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 4
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 2
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 0
+| distributed init (rank 0): env://
+| distributed env init. MASTER_ADDR: 127.0.0.1, MASTER_PORT: 29500, WORLD_SIZE: 8, RANK: 7
+| distributed init done!
+:::MLLOG {"namespace": "", "time_ms": 1593195865495, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+| distributed init done!
+| distributed init done!
+| distributed init done!
+| distributed init done!
+| distributed init done!
+| distributed init done!
+| distributed init done!
+| initialized host horovod2 as rank 0 and device id 0
+:::MLLOG {"namespace": "", "time_ms": 1593195866502, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866535, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866538, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866539, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866544, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866549, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+Namespace(adam_betas='(0.9,0.98)', adam_eps=1e-09, adaptive_softmax_cutoff=None, arch='transformer_wmt_en_de_big_t2t', attention_dropout=0.1, batch_multiple_strategy='dynamic', batching_scheme='v0p5_better', beam=4, bucket_growth_factor=1.035, clip_norm=0.0, cpu=False, criterion='label_smoothed_cross_entropy', data='/data', dataloader_num_workers=2, decoder_attention_heads=16, decoder_embed_dim=1024, decoder_embed_path=None, decoder_ffn_embed_dim=4096, decoder_layers=4, decoder_learned_pos=False, decoder_normalize_before=True, device_id=0, distributed_backend='nccl', distributed_init_method='env://', distributed_port=-1, distributed_rank=0, distributed_weight_update=2, distributed_world_size=8, dropout=0.1, dwu_compute_L2_grad_norm=True, dwu_do_not_flatten_model=False, dwu_e5m2_allgather=False, dwu_flat_mt=True, dwu_full_pipeline=False, dwu_group_size=0, dwu_num_ag_pg=0, dwu_num_ar_pg=2, dwu_num_blocks=4, dwu_num_chunks=1, dwu_num_rs_pg=2, dwu_overlap_reductions=True, enable_dataloader_pin_memory=True, enable_global_stats=False, enable_parallel_backward_allred_opt=False, enable_parallel_backward_allred_opt_correctness_check=False, encoder_attention_heads=16, encoder_embed_dim=1024, encoder_embed_path=None, encoder_ffn_embed_dim=4096, encoder_layers=4, encoder_learned_pos=False, encoder_normalize_before=True, fast_xentropy=True, fp16=True, gen_subset='test', ignore_case=True, keep_interval_updates=-1, label_smoothing=0.1, left_pad_source='True', left_pad_target='False', lenpen=0.6, local_rank=0, log_format=None, log_interval=1000, log_translations=False, lr=[0.0019], lr_scheduler='inverse_sqrt', lr_shrink=0.1, max_epoch=30, max_len_a=1.0, max_len_b=50, max_sentences=None, max_sentences_valid=None, max_source_positions=64, max_target_positions=64, max_tokens=8192, max_update=0, min_len=1, min_loss_scale=0.0001, min_lr=0.0, model_overrides='{}', momentum=0.99, multihead_attn_impl='fast_with_lyrnrm_and_dropoutadd', nbest=1, no_beamable_mm=False, no_early_stop=False, no_epoch_checkpoints=False, no_progress_bar=True, no_save=True, no_token_positional_embeddings=False, num_shards=1, online_eval=False, optimizer='adam', parallel_backward_allred_cuda_nstreams=1, parallel_backward_allred_opt_threshold=0, path=None, prefix_size=0, print_alignment=False, profile=None, quiet=False, raw_text=False, relu_dropout=0.1, remove_bpe=None, replace_unk=None, restore_file='checkpoint_last.pt', sampling=False, sampling_temperature=1, sampling_topk=-1, save_dir='checkpoints', save_interval=1, save_interval_updates=0, score_reference=False, seed=18605, sentence_avg=False, seq_len_multiple=2, shard_id=0, share_all_embeddings=True, share_decoder_input_output_embed=False, skip_invalid_size_inputs_valid_test=False, source_lang='en', target_bleu=25.0, target_lang='de', task='translation', time_step=False, train_subset='train', uniform_n_seq_in_dataset=None, uniform_n_seq_per_batch=None, uniform_seq_len_per_batch=None, unkpen=0, unnormalized=False, update_freq=[1], valid_subset='valid', validate_interval=1, warmup_init_lr=0.0, warmup_updates=750, weight_decay=0.0)
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "global_batch_size", "value": 65536, "metadata": {"file": "/workspace/translation/train.py", "lineno": 132}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "opt_name", "value": "adam", "metadata": {"file": "/workspace/translation/train.py", "lineno": 133}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866549, "event_type": "INTERVAL_START", "key": "init_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 116}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "opt_base_learning_rate", "value": 0.0019, "metadata": {"file": "/workspace/translation/train.py", "lineno": 135}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "opt_learning_rate_warmup_steps", "value": 750, "metadata": {"file": "/workspace/translation/train.py", "lineno": 136}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "max_sequence_length", "value": 64, "metadata": {"file": "/workspace/translation/train.py", "lineno": 138, "method": "discard"}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "opt_adam_beta_1", "value": 0.9, "metadata": {"file": "/workspace/translation/train.py", "lineno": 139}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "opt_adam_beta_2", "value": 0.98, "metadata": {"file": "/workspace/translation/train.py", "lineno": 140}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866610, "event_type": "POINT_IN_TIME", "key": "opt_adam_epsilon", "value": 1e-09, "metadata": {"file": "/workspace/translation/train.py", "lineno": 141}}
+:::MLLOG {"namespace": "", "time_ms": 1593195866611, "event_type": "POINT_IN_TIME", "key": "seed", "value": 18605, "metadata": {"file": "/workspace/translation/train.py", "lineno": 142}}
+Using master seed from command line: 18605
+Worker 0 is using worker seed: 1393333967
+| [en] dictionary: 33712 types
+| [de] dictionary: 33712 types
+| model transformer_wmt_en_de_big_t2t, criterion LabelSmoothedCrossEntropyCriterion
+| num. model params: 152047616
+| training on 8 GPUs
+| max tokens per GPU = 8192 and max sentences per GPU = None
+DistributedFusedAdam {'distributed_weight_update': 2, 'dwu_group_size': 0, 'dwu_num_blocks': 4, 'dwu_num_chunks': 1, 'dwu_num_rs_pg': 2, 'dwu_num_ar_pg': 2, 'dwu_num_ag_pg': 0, 'overlap_reductions': True, 'full_pipeline': False, 'compute_L2_grad_norm': True, 'flat_mt': True, 'e5m2_allgather': False, 'do_not_flatten_model': False}
+self._net_total_param_size=152047616, self._total_param_size=152051712, dwu_min_page_size=8192, self._block_size=38012928, self._chunk_size=38012928, self._shard_size=4751616
+[0, 2, 32, 67]
+model_param_fragment.size()=torch.Size([4751616]), new_param_packed_fragment.size()=torch.Size([4751616]), master_param_fragment.size()=torch.Size([4751616])
+model_param_fragment.size()=torch.Size([702464]), new_param_packed_fragment.size()=torch.Size([702464]), master_param_fragment.size()=torch.Size([702464])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([4047104]), new_param_packed_fragment.size()=torch.Size([4047104]), master_param_fragment.size()=torch.Size([4047104])
+model_param_fragment.size()=torch.Size([465920]), new_param_packed_fragment.size()=torch.Size([465920]), master_param_fragment.size()=torch.Size([465920])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([4194304]), new_param_packed_fragment.size()=torch.Size([4194304]), master_param_fragment.size()=torch.Size([4194304])
+model_param_fragment.size()=torch.Size([4096]), new_param_packed_fragment.size()=torch.Size([4096]), master_param_fragment.size()=torch.Size([4096])
+model_param_fragment.size()=torch.Size([85248]), new_param_packed_fragment.size()=torch.Size([85248]), master_param_fragment.size()=torch.Size([85248])
+model_param_fragment.size()=torch.Size([228352]), new_param_packed_fragment.size()=torch.Size([228352]), master_param_fragment.size()=torch.Size([228352])
+model_param_fragment.size()=torch.Size([4096]), new_param_packed_fragment.size()=torch.Size([4096]), master_param_fragment.size()=torch.Size([4096])
+model_param_fragment.size()=torch.Size([4194304]), new_param_packed_fragment.size()=torch.Size([4194304]), master_param_fragment.size()=torch.Size([4194304])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([1024]), new_param_packed_fragment.size()=torch.Size([1024]), master_param_fragment.size()=torch.Size([1024])
+model_param_fragment.size()=torch.Size([321792]), new_param_packed_fragment.size()=torch.Size([321792]), master_param_fragment.size()=torch.Size([321792])
+:::MLLOG {"namespace": "", "time_ms": 1593195880421, "event_type": "INTERVAL_END", "key": "init_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 211}}
+:::MLLOG {"namespace": "", "time_ms": 1593195880421, "event_type": "INTERVAL_START", "key": "run_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 213}}
+filename: /data/train.en-de.en
+raw_text: False
+| /data train 4590101 examples
+filename: /data/train1.en-de.en
+raw_text: False
+filename: /data/train1.de-en.en
+raw_text: False
+srcline: tensor([  317,   364,     3,   109,  3279,     5,  9113,     8,     5,  5932, 27519, 20049,   156,    14, 17049, 19206,    23,     8,     5, 10701,  7796, 31212,     6,     3,   506,  7090,   454,     4,     2])
+| Sentences are being padded to multiples of: 2
+filename: /data/test.en-de.en
+raw_text: False
+| /data test 3003 examples
+srcline: tensor([ 7549,  4344,    64, 32364,  1259,    20, 13504,  8959,  3868,     2])
+| Sentences are being padded to multiples of: 2
+filename: /data/test1.en-de.en
+raw_text: False
+filename: /data/test1.de-en.en
+raw_text: False
+:::MLLOG {"namespace": "", "time_ms": 1593195881068, "event_type": "POINT_IN_TIME", "key": "train_samples", "value": 4590101, "metadata": {"file": "/workspace/translation/train.py", "lineno": 223}}
+:::MLLOG {"namespace": "", "time_ms": 1593195881068, "event_type": "POINT_IN_TIME", "key": "eval_samples", "value": 3003, "metadata": {"file": "/workspace/translation/train.py", "lineno": 226}}
+self.dataset.src_sizes 4590101
+self.dataset.tgt_sizes 4590101
+generated 16406 batches in 2.177857s
+got epoch iterator 2.178229570388794
+:::MLLOG {"namespace": "", "time_ms": 1593195883247, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 256, "first_epoch_num": 1, "epoch_count": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1593195883247, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 257, "epoch_num": 1}}
+| WARNING: overflow detected, setting loss scale to: 64.0
+| WARNING: overflow detected, setting loss scale to: 32.0
+| WARNING: overflow detected, setting loss scale to: 16.0
+| WARNING: overflow detected, setting loss scale to: 8.0
+| WARNING: overflow detected, setting loss scale to: 4.0
+| epoch 001:   1000 / 2051 loss=39551.743, nll_loss=0.000, ppl=1.00, wps=459733, ups=7.1, wpb=59703, bsz=259, num_updates=996, lr=0.00169619, gnorm=54966.845, clip=100%, oom=0, loss_scale=4.000, wall=140
+| epoch 001:   2000 / 2051 loss=32809.648, nll_loss=0.000, ppl=1.00, wps=461536, ups=7.4, wpb=59697, bsz=256, num_updates=1996, lr=0.00128444, gnorm=35623.607, clip=100%, oom=0, loss_scale=8.000, wall=269
+| epoch 001 | loss 32599.313 | nll_loss 0.000 | ppl 1.00 | wps 461438 | ups 7.4 | wpb 59699 | bsz 255 | num_updates 2046 | lr 0.00127179 | gnorm 35456.036 | clip 100% | oom 0 | loss_scale 8.000 | wall 276
+epoch time  266.0028991699219
+:::MLLOG {"namespace": "", "time_ms": 1593196149250, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 272, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1593196149251, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 641, "epoch_num": 1}}
+self.dataset.src_sizes 3003
+self.dataset.tgt_sizes 3003
+generated 51 batches in 0.001058s
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+/workspace/translation/fairseq/sequence_generator.py:356: UserWarning: Integer division of tensors using div or / is deprecated, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead. (Triggered internally at  ../aten/src/ATen/native/BinaryOps.cpp:66.)
+  torch.div(cand_indices, self.vocab_size, out=cand_beams)
+| Translated 445 sentences (12060 tokens) in 4.9s (91.71 sentences/s, 2485.51 tokens/s)
+| Generate test with beam=4: bleu_score=21.3938
+| Eval completed in: 7.47s
+:::MLLOG {"namespace": "", "time_ms": 1593196156726, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 752, "epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1593196156729, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.21393805742263794, "metadata": {"file": "/workspace/translation/train.py", "lineno": 279, "epoch_num": 1}}
+validation and scoring  7.478655099868774
+:::MLLOG {"namespace": "", "time_ms": 1593196156729, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 294, "first_epoch_num": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1593196156731, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 256, "first_epoch_num": 2, "epoch_count": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1593196156731, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 257, "epoch_num": 2}}
+| epoch 002:   1000 / 2051 loss=24121.805, nll_loss=0.000, ppl=1.00, wps=462081, ups=7.3, wpb=59649, bsz=256, num_updates=3047, lr=0.0010845, gnorm=36099.644, clip=100%, oom=0, loss_scale=16.000, wall=413
+| WARNING: overflow detected, setting loss scale to: 8.0
+| epoch 002:   2000 / 2051 loss=23872.590, nll_loss=0.000, ppl=1.00, wps=461794, ups=7.5, wpb=59699, bsz=258, num_updates=4046, lr=0.000968206, gnorm=35624.971, clip=100%, oom=0, loss_scale=8.000, wall=542
+| epoch 002 | loss 23882.086 | nll_loss 0.000 | ppl 1.00 | wps 461709 | ups 7.5 | wpb 59694 | bsz 257 | num_updates 4096 | lr 0.000963461 | gnorm 35917.695 | clip 100% | oom 0 | loss_scale 16.000 | wall 548
+epoch time  265.20175981521606
+:::MLLOG {"namespace": "", "time_ms": 1593196421933, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 272, "epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1593196421934, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 641, "epoch_num": 2}}
+self.dataset.src_sizes 3003
+self.dataset.tgt_sizes 3003
+generated 51 batches in 0.001045s
+| Translated 445 sentences (11974 tokens) in 4.6s (96.26 sentences/s, 2590.26 tokens/s)
+| Generate test with beam=4: bleu_score=23.9556
+| Eval completed in: 7.22s
+:::MLLOG {"namespace": "", "time_ms": 1593196429158, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 752, "epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1593196429161, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.23955632746219635, "metadata": {"file": "/workspace/translation/train.py", "lineno": 279, "epoch_num": 2}}
+validation and scoring  7.2280802726745605
+:::MLLOG {"namespace": "", "time_ms": 1593196429161, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 294, "first_epoch_num": 2}}
+:::MLLOG {"namespace": "", "time_ms": 1593196429176, "event_type": "INTERVAL_START", "key": "block_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 256, "first_epoch_num": 3, "epoch_count": 1}}
+:::MLLOG {"namespace": "", "time_ms": 1593196429177, "event_type": "INTERVAL_START", "key": "epoch_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 257, "epoch_num": 3}}
+| WARNING: overflow detected, setting loss scale to: 8.0
+| epoch 003:   1000 / 2051 loss=22756.499, nll_loss=0.000, ppl=1.00, wps=461499, ups=7.3, wpb=59800, bsz=260, num_updates=5096, lr=0.000882849, gnorm=39096.960, clip=100%, oom=0, loss_scale=8.000, wall=685
+| WARNING: overflow detected, setting loss scale to: 8.0
+| epoch 003:   2000 / 2051 loss=22742.563, nll_loss=0.000, ppl=1.00, wps=460657, ups=7.5, wpb=59703, bsz=262, num_updates=6095, lr=0.000821843, gnorm=39564.975, clip=100%, oom=0, loss_scale=8.000, wall=815
+| epoch 003 | loss 22734.309 | nll_loss 0.000 | ppl 1.00 | wps 460616 | ups 7.5 | wpb 59699 | bsz 262 | num_updates 6145 | lr 0.000819161 | gnorm 39563.041 | clip 100% | oom 0 | loss_scale 8.000 | wall 821
+epoch time  265.7049341201782
+:::MLLOG {"namespace": "", "time_ms": 1593196694882, "event_type": "INTERVAL_END", "key": "epoch_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 272, "epoch_num": 3}}
+:::MLLOG {"namespace": "", "time_ms": 1593196694882, "event_type": "INTERVAL_START", "key": "eval_start", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 641, "epoch_num": 3}}
+self.dataset.src_sizes 3003
+self.dataset.tgt_sizes 3003
+generated 51 batches in 0.001034s
+| Translated 445 sentences (11972 tokens) in 4.6s (95.73 sentences/s, 2575.42 tokens/s)
+| Generate test with beam=4: bleu_score=25.2590
+| Eval completed in: 7.26s
+:::MLLOG {"namespace": "", "time_ms": 1593196702140, "event_type": "INTERVAL_END", "key": "eval_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 752, "epoch_num": 3}}
+:::MLLOG {"namespace": "", "time_ms": 1593196702142, "event_type": "POINT_IN_TIME", "key": "eval_accuracy", "value": 0.2525898516178131, "metadata": {"file": "/workspace/translation/train.py", "lineno": 279, "epoch_num": 3}}
+validation and scoring  7.261056900024414
+:::MLLOG {"namespace": "", "time_ms": 1593196702143, "event_type": "INTERVAL_END", "key": "block_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 294, "first_epoch_num": 3}}
+:::MLLOG {"namespace": "", "time_ms": 1593196702144, "event_type": "INTERVAL_END", "key": "run_stop", "value": null, "metadata": {"file": "/workspace/translation/train.py", "lineno": 299, "status": "success"}}
+| done training in 821.7 seconds
+++ ret_code=0
+++ sleep 3
+++ [[ 0 != 0 ]]
++++ date +%s
+++ END=1593196707
++++ date '+%Y-%m-%d %r'
+++ END_FMT='2020-06-26 06:38:27 PM'
+++ echo 'ENDING TIMING RUN AT 2020-06-26 06:38:27 PM'
+ENDING TIMING RUN AT 2020-06-26 06:38:27 PM
+++ RESULT=846
+++ RESULT_NAME=transformer
+++ echo 'RESULT,transformer,18605,846,,2020-06-26 06:24:21 PM'
+RESULT,transformer,18605,846,,2020-06-26 06:24:21 PM
++ set +x

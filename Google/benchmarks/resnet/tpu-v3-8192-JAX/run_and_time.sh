@@ -1,0 +1,1 @@
+$BORG_ALLOC_DIR/bin/imagenet.par --batch_size=65536
